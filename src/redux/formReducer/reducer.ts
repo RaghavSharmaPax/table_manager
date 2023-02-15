@@ -15,6 +15,10 @@ const initialState: {
     dimensions: { rows: 0, cols: 0 },
     table: [],
   },
+  toShow: {
+    rows: 0,
+    cols: 0,
+  },
   loading: false,
   error: "",
 };
@@ -36,8 +40,8 @@ const formReducer = createSlice({
       const { rows: new_rows, cols: new_cols } = action.payload;
       const table = state.data.table;
 
-      updateRows(table, prev_rows, new_rows, prev_cols);
-      updateColumns(table, prev_cols, new_cols);
+      updateRows(table, state.toShow, prev_rows, new_rows, prev_cols);
+      updateColumns(table, state.toShow, prev_cols, new_cols);
 
       state.data.dimensions = { rows: new_rows, cols: new_cols };
       state.data.table = table;
@@ -56,6 +60,10 @@ const formReducer = createSlice({
         username: "",
         dimensions: { rows: 0, cols: 0 },
         table: [],
+      };
+      state.toShow = {
+        rows: 0,
+        cols: 0,
       };
     },
   },
@@ -76,6 +84,7 @@ const formReducer = createSlice({
       })
       .addCase(getFormData.fulfilled, (state, action) => {
         state.data = action.payload;
+        state.toShow = { ...action.payload.dimensions };
         state.loading = false;
       })
       .addCase(getFormData.rejected, (state, action) => {

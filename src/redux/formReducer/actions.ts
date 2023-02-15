@@ -10,7 +10,7 @@ const postData = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     const state = getState() as RootState;
 
-    const data = state.form.data;
+    const { data, toShow } = state.form;
 
     // checking if the data is valid
     const isDataValid = validateData(data);
@@ -19,7 +19,7 @@ const postData = createAsyncThunk(
       return rejectWithValue("Please Enter a valid Username");
     }
 
-    const filteredTable = getFilteredTable(data.table);
+    const filteredTable = getFilteredTable(data.table, toShow);
 
     const res = await sendData({
       ...data,
