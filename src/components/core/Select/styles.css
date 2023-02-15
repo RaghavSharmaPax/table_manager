@@ -1,0 +1,8 @@
+.select {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.select__input {
+  width: 100%;
+}

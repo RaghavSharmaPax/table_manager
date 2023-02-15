@@ -1,0 +1,47 @@
+.notification {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.active {
+  top: 10px;
+  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+  animation: moveDown 1s ease-in forwards, moveUp 1s ease-out 10s forwards;
+}
+
+.notification__message {
+  padding: 10px;
+  width: 50%;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+.valid {
+  background: lightgreen;
+  visibility: visible;
+}
+
+.error {
+  background: coral;
+  visibility: visible;
+}
+
+@keyframes moveDown {
+  from {
+    top: -50px;
+  }
+  to {
+    top: 10px;
+  }
+}
+
+@keyframes moveUp {
+  from {
+    top: 0px;
+  }
+  to {
+    top: -50px;
+  }
+}

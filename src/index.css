@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root,
+.App {
+  height: 100%;
+  width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  outline: 2px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: lightgray;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 4px;
+}
