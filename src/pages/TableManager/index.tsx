@@ -15,8 +15,17 @@ import "./styles.css";
 const TableManager = () => {
   const dispatch = useAppDispatch();
 
-  // to get the list of users when the page loads
+  /**
+   * to get the list of users when the page loads
+   */
   useEffect(() => {
+    /**
+     * @returns void
+     *
+     * dispatches an action to fetch users
+     * positive response -> positive notification
+     * negative response -> negative notification
+     */
     const fetchUsers = async () => {
       const res = await dispatch(getUserList());
       if (res.meta.requestStatus === "rejected")
@@ -32,12 +41,21 @@ const TableManager = () => {
     fetchUsers();
   }, [dispatch]);
 
-  // clearing the state after successful submission
+  /**
+   * clearing the state after successful submission
+   */
   const clearForm = () => {
     dispatch(clearState());
   };
 
-  // handling the form submission
+  /**
+   * handling the form submission
+   * dispatches action to post data to db
+   * negative res -> negative notification, exit
+   * positive res -> positive notification
+   * dispatch action to fetch the user list
+   * clear the form
+   */
   const onSubmit = async () => {
     const res = await dispatch(postData());
 

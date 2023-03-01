@@ -4,10 +4,19 @@ import { TagName } from "../../utils/TableManager/utils";
 import Input from "../core/Input/Input";
 
 const DimensionInput = () => {
+  /**
+   * @var rows stores the rows of the table from the global store
+   * @var cols stores the cols of the table from the global store
+   */
   const { rows, cols } = useAppSelector((state) => state.form.data.dimensions);
   const dispatch = useAppDispatch();
 
-  // handling change in dimensions according to type i.e., row or column
+  /**
+   * @function onInputChange
+   * handles the changes in the row and cols inputs and updates the store
+   *
+   * @param e synthetic event
+   */
   const onInputChange = (e: any) => {
     const val = +e.target.value;
     switch (e.target.name) {

@@ -27,11 +27,19 @@ const formReducer = createSlice({
   name: "form",
   initialState: initialState,
   reducers: {
-    // update the username
+    /**
+     * @function updateUsername updates the username of the form
+     * @param state current state of the formReducer
+     * @param action contains a string representing the username
+     */
     updateUsername(state, action: PayloadAction<string>) {
       state.data.username = action.payload;
     },
-    // update dimensions, add or remove rows or cols from the table
+    /**
+     * @function updateDimensions updates the dimensions of the table (row, col)
+     * @param state current state of the formReducer
+     * @param action contains object for number of rows and columns
+     */
     updateDimensions(
       state,
       action: PayloadAction<{ rows: number; cols: number }>
@@ -46,15 +54,21 @@ const formReducer = createSlice({
       state.data.dimensions = { rows: new_rows, cols: new_cols };
       state.data.table = table;
     },
-    //update table items
+    /**
+     * @function updateTable updates the rows of the table
+     * @param state current state of the form Reducer
+     * @param action contains the table row to be updated and index of the row
+     */
     updateTable(
       state,
       action: PayloadAction<{ tableRow: string[]; rowIdx: number }>
     ) {
       state.data.table[action.payload.rowIdx] = action.payload.tableRow;
     },
-
-    // reset the state
+    /**
+     * @function clearState resets the table state to empty values
+     * @param state current state of the form Reducer
+     */
     clearState(state) {
       state.data = {
         username: "",

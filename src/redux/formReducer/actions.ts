@@ -3,10 +3,11 @@ import { RootState } from "..";
 import { getUserData, sendData } from "../../api/apiController";
 
 import { getFilteredTable, validateData } from "../../utils/TableManager/utils";
-
+/**
+ * @function postData asynchronus store action for sending form data to the server
+ */
 const postData = createAsyncThunk(
   "form/post",
-  // function to validate the data and send it to the server
   async (_, { getState, rejectWithValue }) => {
     const state = getState() as RootState;
 
@@ -19,8 +20,10 @@ const postData = createAsyncThunk(
       return rejectWithValue("Please Enter a valid Username");
     }
 
+    // get filterer table
     const filteredTable = getFilteredTable(data.table, toShow);
 
+    // send post request
     const res = await sendData({
       ...data,
       dimensions: {
@@ -30,15 +33,24 @@ const postData = createAsyncThunk(
       table: filteredTable,
     });
 
+    // reject the promise if error occurs
     if (res.error) return rejectWithValue("Error Occured");
 
+    // return the response on promise resolved
     return res;
   }
 );
 
+/**
+ * @function getFormData fetches the userdata based on the username provided
+ */
 const getFormData = createAsyncThunk(
   "form/getData",
-  // function to fetch the form data of a user from the server
+  /**
+   *
+   * @param name username selected
+   * @returns userdata as response
+   */
   async (name: string, { rejectWithValue }) => {
     const res = await getUserData(name);
 

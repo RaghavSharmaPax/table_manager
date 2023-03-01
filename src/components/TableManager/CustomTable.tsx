@@ -3,6 +3,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import Input from "../core/Input/Input";
 
 const CustomTable = () => {
+  /**
+   * @var tableData stores the table data from the global state
+   * @var toShow stores the object which determines how many rows and columns to show on the display
+   */
   const [tableData, toShow] = useAppSelector((state) => [
     state.form.data.table,
     state.form.toShow,
@@ -10,7 +14,10 @@ const CustomTable = () => {
 
   const dispatch = useAppDispatch();
 
-  // function to reflect the change in row
+  /**
+   * @function updateRowVal handles the changes to cells in a row and updates the table in the store
+   * @param e synthetic event
+   */
   const updateRowVal = (e: any) => {
     const [rowIndex, colIndex] = e.target.name.split(",");
     const newTableRow = [...tableData[+rowIndex]];

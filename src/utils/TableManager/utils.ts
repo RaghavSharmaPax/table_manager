@@ -1,11 +1,15 @@
-// type for the main state and the type of data for api
+/**
+ * @type FormType for the main state and the type of data for api
+ */
 type FormType = {
   username: string;
   dimensions: { rows: number; cols: number };
   table: string[][];
 };
 
-// names for input and select tag
+/**
+ * names for input and select tag
+ */
 enum TagName {
   Row = "rowsInput",
   Col = "colsInput",
@@ -13,13 +17,23 @@ enum TagName {
   UserSelect = "userSelect",
 }
 
-// notification type
+/**
+ * @type NotificationType
+ */
 enum NotificationType {
   Error = "error",
   Valid = "valid",
   Default = "",
 }
 
+/**
+ * @function updateRows adds the rows to the table upon change from the user
+ * @param table 2D matrix for storing table data
+ * @param toShow object containing number of rows and columns to show to the user
+ * @param prev_rows number of rows before updating the table
+ * @param new_rows number of new rows added to the table
+ * @param cols number of cols in the table
+ */
 const updateRows = (
   table: string[][],
   toShow: { rows: number; cols: number },
@@ -44,6 +58,14 @@ const updateRows = (
   else toShow.rows += prev_rows - new_rows;
 };
 
+/**
+ * @function updateColumns updates the columns in the table
+ * @param table 2D string matrix to store table data
+ * @param toShow object defining number of rows and columns to show to the user
+ * @param prev_cols number of columns before updating
+ * @param new_cols number of new columns added to the table
+ */
+
 const updateColumns = (
   table: string[][],
   toShow: { rows: number; cols: number },
@@ -64,7 +86,11 @@ const updateColumns = (
   } else toShow.cols += prev_cols - new_cols;
 };
 
-// function to validate data before sending to the server
+/**
+ * @function validateData validates if a username was given with the data
+ * @param data form data containing username, table and dimensions
+ * @returns boolean
+ */
 const validateData = (data: FormType) => {
   if (!data?.username?.trim()) {
     return false;
@@ -72,7 +98,12 @@ const validateData = (data: FormType) => {
   return true;
 };
 
-// filtering table to remove the empty rows
+/**
+ * @function getFilteredTable filters out the empty rows
+ * @param table 2D string table for storing table data
+ * @param toShow object containing number of rows and columns to show to the user
+ * @returns filtered table
+ */
 const getFilteredTable = (
   table: string[][],
   toShow: { rows: number; cols: number }

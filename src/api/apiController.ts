@@ -1,11 +1,19 @@
 import { FormType } from "../utils/TableManager/utils";
 
-// common function to handle thre response and errors
+/**
+ * @function handleResponse utility function to handle the responses from various requests
+ * @param res response to the request sent
+ * @returns json response
+ */
 const handleResponse = async (res: Response) => {
   return await res.json();
 };
 
-// function to call the server to upload the new form data
+/**
+ * @function sendData post the data to the server
+ * @param formData
+ * @returns ack or error
+ */
 const sendData = async (formData: FormType) => {
   try {
     const res = await fetch("/form/data", {
@@ -20,7 +28,11 @@ const sendData = async (formData: FormType) => {
   }
 };
 
-// function to get the user data in response to selection from the dropdown
+/**
+ * @function sendData get userdata for the given username
+ * @param username user selected from the dropdown list
+ * @returns userData or error
+ */
 const getUserData = async (username: string) => {
   try {
     const res = await fetch(
@@ -33,7 +45,10 @@ const getUserData = async (username: string) => {
   }
 };
 
-// fetching the list of all the users that have created a record
+/**
+ * @function fetchUsers fetches the list of users
+ * @returns usernames of all the registered users
+ */
 const fetchUsers = async () => {
   try {
     const res = await fetch("/user/list", {

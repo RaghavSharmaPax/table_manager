@@ -13,6 +13,11 @@ const reducer = createReducer(initialState, (builder) => {
   builder
     .addCase(
       createNotification,
+      /**
+       *
+       * @param state current state of the notification reducer
+       * @param action object containing the message and type for the notification
+       */
       (
         state,
         action: PayloadAction<{ message: string; type: NotificationType }>
@@ -21,10 +26,18 @@ const reducer = createReducer(initialState, (builder) => {
         state.message.type = action.payload.type;
       }
     )
-    .addCase(deleteNotification, (state, _action) => {
-      state.message.text = "";
-      state.message.type = NotificationType.Default;
-    });
+    .addCase(
+      deleteNotification,
+      /**
+       *
+       * @param state current state of the notification reducer
+       * @param _action empty action
+       */
+      (state, _action) => {
+        state.message.text = "";
+        state.message.type = NotificationType.Default;
+      }
+    );
 });
 
 export default reducer;

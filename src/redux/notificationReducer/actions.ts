@@ -1,8 +1,9 @@
 import { createAction } from "@reduxjs/toolkit";
 import { NotificationType } from "../../utils/TableManager/utils";
 
-// preparing action with the given message and type
-// ****add type of message for notification background
+/**
+ * @function createNotification sets the payload for the reducer to the message and type of notification
+ */
 const createNotification = createAction(
   "notification/create",
   (message: string, type: NotificationType) => ({
