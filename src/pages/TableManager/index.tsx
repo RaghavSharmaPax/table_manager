@@ -1,23 +1,25 @@
+import download from "downloadjs";
 import { useEffect } from "react";
+import Button from "../../components/core/Button";
 
 import CustomTable from "../../components/TableManager/CustomTable";
 import DimensionInput from "../../components/TableManager/DimensionInput";
 import UserInput from "../../components/TableManager/UserInput";
 
-import { postData } from "../../redux/formReducer/actions";
+import { faDownload, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { downloadTable, postData } from "../../redux/formReducer/actions";
 import { clearState } from "../../redux/formReducer/reducer";
-import { useAppDispatch } from "../../redux/hooks";
-import { createNotification } from "../../redux/notificationReducer/actions";
-import { getUserList } from "../../redux/userReducer/actions";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { createNotification } from "../../redux/notificationReducer/reducer";
+import { getUserTables } from "../../redux/userReducer/actions";
 import { NotificationType } from "../../utils/TableManager/utils";
 import "./styles.css";
 
 const TableManager = () => {
   const dispatch = useAppDispatch();
+  const activeTable = useAppSelector((state) => state.form.data.tableName);
 
-  /**
-   * to get the list of users when the page loads
-   */
   useEffect(() => {
     /**
      * @returns void
@@ -27,18 +29,18 @@ const TableManager = () => {
      * negative response -> negative notification
      */
     const fetchUsers = async () => {
-      const res = await dispatch(getUserList());
-      if (res.meta.requestStatus === "rejected")
-        // generating notification
-        return dispatch(
-          createNotification(
-            "User's could not be fetched.",
-            NotificationType.Error
-          )
-        );
-      dispatch(createNotification("User's Fetched", NotificationType.Valid));
+      const res = await dispatch(getUserTables());
+      if (res.meta.requestStatus === "rejected") return;
+      dispatch(
+        createNotification({
+          message: "User Tables Fetched",
+          type: NotificationType.Valid,
+        })
+      );
     };
     fetchUsers();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   /**
@@ -60,13 +62,48 @@ const TableManager = () => {
     const res = await dispatch(postData());
 
     if (res.meta.requestStatus === "rejected")
-      return dispatch(createNotification(res.payload, NotificationType.Error));
+      return dispatch(
+        createNotification({
+          message: res.payload,
+          type: NotificationType.Error,
+        })
+      );
 
     dispatch(
-      createNotification("New Entry has been added.", NotificationType.Valid)
+      createNotification({
+        message: "New Entry has been added.",
+        type: NotificationType.Valid,
+      })
     );
-    dispatch(getUserList());
+    dispatch(getUserTables());
     clearForm();
+  };
+
+  /**
+   * dispatches a request to download a table
+   * uses downloadjs to download data to the client
+   * @returns void
+   */
+  const onDownload = async () => {
+    const res = await dispatch(downloadTable());
+
+    if (res.meta.requestStatus === "rejected") {
+      return dispatch(
+        createNotification({
+          message: res.payload,
+          type: NotificationType.Error,
+        })
+      );
+    }
+
+    dispatch(
+      createNotification({
+        message: "Download should start momentarily",
+        type: NotificationType.Valid,
+      })
+    );
+
+    download(res.payload, activeTable + ".csv", "text/csv");
   };
 
   return (
@@ -74,14 +111,14 @@ const TableManager = () => {
       <UserInput />
       <DimensionInput />
       <CustomTable />
-
-      <button
-        onClick={onSubmit}
-        type="submit"
-        className="table_manager__submit_btn"
-      >
-        Submit
-      </button>
+      <div className="table_manager__cta">
+        <Button type="submit" text="Save" onClick={onSubmit}>
+          <FontAwesomeIcon icon={faFloppyDisk} />
+        </Button>
+        <Button type="button" text="Download" onClick={onDownload}>
+          <FontAwesomeIcon icon={faDownload} />
+        </Button>
+      </div>
     </div>
   );
 };

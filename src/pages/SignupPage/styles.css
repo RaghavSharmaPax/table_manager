@@ -1,0 +1,46 @@
+.signup_page {
+  width: 100%;
+  padding: 2em;
+  height: 100%;
+  background-color: #f0f2f5;
+  display: flex;
+  gap: 8%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.signup_page__hero {
+  min-height: 350px;
+  max-height: 400px;
+  min-width: 250px;
+  max-width: 500px;
+  width: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  height: 55%;
+  background-color: #fff;
+  padding: 2em;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signup_page__header {
+  text-align: center;
+  font-family: system-ui;
+
+  color: rgba(0, 0, 0, 0.85);
+  width: 100%;
+}
+
+.signup_page__redirect {
+  transition: color 250ms ease;
+}
+.signup_page__redirect {
+  color: #1890ff;
+}
+.signup_page__redirect:hover {
+  color: #40a9ff;
+}

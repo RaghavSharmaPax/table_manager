@@ -1,0 +1,30 @@
+.avatar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 50px;
+  overflow: hidden;
+  transition: width 250ms ease-out;
+  cursor: pointer;
+}
+
+.avatar__img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
+
+.avatar > .btn {
+  height: 33px;
+  visibility: hidden;
+  flex-shrink: 0;
+}
+
+.avatar:hover {
+  width: 180px;
+}
+
+.avatar:hover > .btn {
+  visibility: visible;
+}

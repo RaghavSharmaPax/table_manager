@@ -1,6 +1,12 @@
 .App {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
   text-align: center;
   position: relative;
+  background-color: #f0f2f5;
 }
 
 .App-logo {
@@ -36,4 +42,12 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.App__title {
+  color: #0180be;
+  font-family: system-ui;
+  background-color: #f0f2f5;
+  padding: 1em;
+  padding-bottom: 0;
 }

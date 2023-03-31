@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  FormType,
+  TableType,
   updateColumns,
   updateRows,
 } from "../../utils/TableManager/utils";
-import { getFormData, postData } from "./actions";
+import { downloadTable, getTableData, postData } from "./actions";
 
 const initialState: {
-  data: FormType;
+  data: TableType;
   [key: string]: any;
 } = {
   data: {
-    username: "",
+    tableName: "",
     dimensions: { rows: 0, cols: 0 },
     table: [],
   },
@@ -32,8 +32,8 @@ const formReducer = createSlice({
      * @param state current state of the formReducer
      * @param action contains a string representing the username
      */
-    updateUsername(state, action: PayloadAction<string>) {
-      state.data.username = action.payload;
+    updateTableName(state, action: PayloadAction<string>) {
+      state.data.tableName = action.payload;
     },
     /**
      * @function updateDimensions updates the dimensions of the table (row, col)
@@ -61,9 +61,14 @@ const formReducer = createSlice({
      */
     updateTable(
       state,
-      action: PayloadAction<{ tableRow: string[]; rowIdx: number }>
+      action: PayloadAction<{
+        newValue: string;
+        rowIdx: number;
+        colIdx: number;
+      }>
     ) {
-      state.data.table[action.payload.rowIdx] = action.payload.tableRow;
+      state.data.table[action.payload.rowIdx][action.payload.colIdx] =
+        action.payload.newValue;
     },
     /**
      * @function clearState resets the table state to empty values
@@ -71,7 +76,7 @@ const formReducer = createSlice({
      */
     clearState(state) {
       state.data = {
-        username: "",
+        tableName: "",
         dimensions: { rows: 0, cols: 0 },
         table: [],
       };
@@ -79,6 +84,7 @@ const formReducer = createSlice({
         rows: 0,
         cols: 0,
       };
+      state.error = "";
     },
   },
   extraReducers: (builder) => {
@@ -93,21 +99,30 @@ const formReducer = createSlice({
       .addCase(postData.fulfilled, (state, _action) => {
         state.loading = false;
       })
-      .addCase(getFormData.pending, (state, _action) => {
+      .addCase(getTableData.pending, (state, _action) => {
         state.loading = true;
       })
-      .addCase(getFormData.fulfilled, (state, action) => {
+      .addCase(getTableData.fulfilled, (state, action) => {
         state.data = action.payload;
         state.toShow = { ...action.payload.dimensions };
         state.loading = false;
       })
-      .addCase(getFormData.rejected, (state, action) => {
+      .addCase(getTableData.rejected, (state, action) => {
         state.error = action.payload;
+        state.loading = false;
+      })
+      .addCase(downloadTable.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(downloadTable.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(downloadTable.rejected, (state, action) => {
         state.loading = false;
       });
   },
 });
 
-export const { updateUsername, updateDimensions, updateTable, clearState } =
+export const { updateTableName, updateDimensions, updateTable, clearState } =
   formReducer.actions;
 export default formReducer.reducer;

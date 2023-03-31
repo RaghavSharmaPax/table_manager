@@ -1,11 +1,15 @@
+import { AxiosResponse, AxiosError } from "axios";
+
 /**
  * @type FormType for the main state and the type of data for api
  */
-type FormType = {
-  username: string;
+type TableType = {
+  tableName: string;
   dimensions: { rows: number; cols: number };
   table: string[][];
 };
+
+type ResponseType = AxiosResponse<any, any> & { err: AxiosError };
 
 /**
  * names for input and select tag
@@ -13,8 +17,8 @@ type FormType = {
 enum TagName {
   Row = "rowsInput",
   Col = "colsInput",
-  Username = "userInput",
-  UserSelect = "userSelect",
+  TableName = "tableInput",
+  TableSelect = "tableSelect",
 }
 
 /**
@@ -23,8 +27,24 @@ enum TagName {
 enum NotificationType {
   Error = "error",
   Valid = "valid",
-  Default = "",
+  Default = "default",
 }
+
+/**
+ * @type UserTable
+ */
+type UserTableType = {
+  tableName: string;
+  _id: string;
+};
+
+/**
+ * @type UserType
+ */
+type UserType = {
+  username: string;
+  _id: string;
+};
 
 /**
  * @function updateRows adds the rows to the table upon change from the user
@@ -91,8 +111,8 @@ const updateColumns = (
  * @param data form data containing username, table and dimensions
  * @returns boolean
  */
-const validateData = (data: FormType) => {
-  if (!data?.username?.trim()) {
+const validateData = (data: TableType) => {
+  if (!data?.tableName?.trim()) {
     return false;
   }
   return true;
@@ -127,4 +147,4 @@ export {
   updateRows,
   updateColumns,
 };
-export type { FormType };
+export type { UserType, TableType, ResponseType, UserTableType };

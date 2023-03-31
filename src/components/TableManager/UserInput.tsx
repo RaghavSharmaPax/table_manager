@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
-import { getFormData } from "../../redux/formReducer/actions";
-import { clearState, updateUsername } from "../../redux/formReducer/reducer";
+import { getTableData } from "../../redux/formReducer/actions";
+import { clearState, updateTableName } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { TagName } from "../../utils/TableManager/utils";
+import { createNotification } from "../../redux/notificationReducer/reducer";
+import { NotificationType, TagName } from "../../utils/TableManager/utils";
 import Input from "../core/Input/Input";
 import Select from "../core/Select/Select";
 
-const UserInput = () => {
+const TableInput = () => {
   /**
    * @var username fetch and store the username from the store
    * @var error fetch and store any error occurred during form submission
    * @var users fetch and store the userlist from the store
    * @var userSelected to manage the user dropdown list
    */
-  const { username, error: form_error } = useAppSelector((state) => ({
-    username: state.form.data.username,
+  const { tableName, error: form_error } = useAppSelector((state) => ({
+    tableName: state.form.data.tableName,
     error: state.form.error as string,
   }));
-  const { users: userList } = useAppSelector((state) => state.user);
+  const { userTables } = useAppSelector((state) => state.user);
 
-  const [userSelected, setUserSelected] = useState("");
+  const [tableSelected, setTableSelected] = useState("");
 
   const dispatch = useAppDispatch();
 
@@ -27,8 +28,26 @@ const UserInput = () => {
    * @function useEffect set username to empty if no value is selected
    */
   useEffect(() => {
-    if (!username) setUserSelected("");
-  }, [username]);
+    if (!tableName) setTableSelected("");
+  }, [tableName]);
+
+  const fetchTableData = async (name: string) => {
+    const res = await dispatch(getTableData(name));
+    if (res.meta.requestStatus === "rejected") {
+      return dispatch(
+        createNotification({
+          message: res.payload,
+          type: NotificationType.Error,
+        })
+      );
+    }
+    dispatch(
+      createNotification({
+        message: "Table data fetched.",
+        type: NotificationType.Valid,
+      })
+    );
+  };
 
   /**
    * @function onInputChange
@@ -43,16 +62,17 @@ const UserInput = () => {
   const onInputChange = (e: any) => {
     const name = e.target.value;
 
-    if (e.target.name === TagName.UserSelect) {
-      setUserSelected(name);
+    if (e.target.name === TagName.TableSelect) {
+      setTableSelected(name);
       // if "" was selected clear the form
       if (!name) return dispatch(clearState());
 
       // fetch the form data for the given user
-      dispatch(getFormData(name));
+      // dispatch(getFormData(name));
+      fetchTableData(name);
     }
 
-    dispatch(updateUsername(name));
+    dispatch(updateTableName(name));
   };
 
   return (
@@ -60,20 +80,20 @@ const UserInput = () => {
       <Input
         error={form_error}
         type="text"
-        label="Username"
-        value={username}
-        name={TagName.Username}
+        label="Table Name"
+        value={tableName}
+        name={TagName.TableName}
         onChange={onInputChange}
       />
       <Select
-        data={userList}
-        value={userSelected}
-        name={TagName.UserSelect}
+        data={userTables}
+        value={tableSelected}
+        name={TagName.TableSelect}
         onChange={onInputChange}
-        label="Select User"
+        label="Select Table"
       />
     </div>
   );
 };
 
-export default UserInput;
+export default TableInput;

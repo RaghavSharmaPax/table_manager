@@ -18,16 +18,15 @@ const CustomTable = () => {
    * @function updateRowVal handles the changes to cells in a row and updates the table in the store
    * @param e synthetic event
    */
-  const updateRowVal = (e: any) => {
-    const [rowIndex, colIndex] = e.target.name.split(",");
-    const newTableRow = [...tableData[+rowIndex]];
-    newTableRow[+colIndex] = e.target.value;
-
-    dispatch(updateTable({ tableRow: newTableRow, rowIdx: +rowIndex }));
+  const updateRowVal = (newValue: string, rowIdx: number, colIdx: number) => {
+    dispatch(updateTable({ newValue, rowIdx, colIdx }));
   };
 
   return (
-    <div className="custom_table">
+    <div
+      data-testid="test_table"
+      className={`custom_table ${tableData.length > 5 ? "filled" : ""}`}
+    >
       <table>
         <tbody>
           {tableData.map((row, rowIdx) =>
@@ -41,7 +40,9 @@ const CustomTable = () => {
                         label=""
                         name={`${rowIdx},${colIdx}`}
                         value={col}
-                        onChange={updateRowVal}
+                        onChange={(e: any) =>
+                          updateRowVal(e.target.value, rowIdx, colIdx)
+                        }
                       />
                     </td>
                   ) : null

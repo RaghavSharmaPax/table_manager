@@ -1,16 +1,10 @@
-import { createAction } from "@reduxjs/toolkit";
-import { NotificationType } from "../../utils/TableManager/utils";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 /**
- * @function createNotification sets the payload for the reducer to the message and type of notification
+ * action to finisht the view timer for the notification
  */
-const createNotification = createAction(
-  "notification/create",
-  (message: string, type: NotificationType) => ({
-    payload: { message, type },
-  })
-);
-// deleting the notification
-const deleteNotification = createAction("notification/delete");
+const finishTimer = createAsyncThunk("notification/finish", (idx: number) => {
+  return { idx };
+});
 
-export { createNotification, deleteNotification };
+export { finishTimer };

@@ -20,6 +20,7 @@ const Input = ({
     <div className="input">
       <label>{label}</label>
       <input
+        data-testid="test_input"
         type={type}
         value={value}
         name={name}

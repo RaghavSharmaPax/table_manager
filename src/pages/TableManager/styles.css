@@ -7,34 +7,58 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 1em;
+  background-color: #f0f2f5;
 }
 
 .user_inputs,
 .dimension_inputs {
   width: 100%;
-  max-width: 700px;
-  padding: 1em;
+  max-width: 500px;
+  /* padding: 1em 0; */
+  gap: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
 
+/* .user_inputs .input,
+.user_inputs .select {
+  width: auto;
+  max-width: 45%;
+} */
+
 .custom_table {
   width: 100%;
   overflow: auto;
+  max-height: calc(100vh * 0.4);
+}
+/* 
+@media only screen and (max-width: 570px) {
+  .custom_table {
+    min-height: 150px;
+  }
+} */
+
+.custom_table.filled {
+  min-height: 200px;
 }
 
-.table_manager__submit_btn {
-  padding: 8px 12px;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  background-color: lightgray;
+.custom_table .input {
+  min-width: 150px;
 }
-.table_manger__submit_btn:hover {
-  background-color: gray;
+
+.table_manager .btn {
+  max-width: 500px;
+  margin: 0px auto;
+}
+
+.table_manager__cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
 }
 
 @media screen and (max-width: 450px) {
@@ -42,5 +66,11 @@
   .dimension_inputs {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .table_manager__cta {
+    flex-direction: column;
+    justify-content: none;
+    align-items: none;
   }
 }
