@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserTableType, UserType } from "../../utils/TableManager/utils";
+import { UserTableType } from "../../utils/TableManager/utils";
 import {
   authenticateUser,
   createNewUser,
   getUserTables,
   logoutUser,
+  signoutUser,
 } from "./actions";
 
 const userReducer = createSlice({
   name: "user",
   initialState: {
-    user: {} as UserType,
+    user: "",
     isAuthenticated: false,
     userTables: [] as UserTableType[],
     loading: false,
@@ -23,7 +24,7 @@ const userReducer = createSlice({
         state.loading = true;
       })
       .addCase(authenticateUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.username;
         state.isAuthenticated = true;
         state.loading = false;
       })
@@ -38,7 +39,7 @@ const userReducer = createSlice({
       .addCase(logoutUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
-        state.user = {} as UserType;
+        state.user = "";
         state.userTables = [] as UserTableType[];
         state.error = "";
       })
@@ -46,11 +47,26 @@ const userReducer = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(signoutUser.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(signoutUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.user = "";
+        state.userTables = [] as UserTableType[];
+        state.error = "";
+      })
+      .addCase(signoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       .addCase(getUserTables.pending, (state, _action) => {
         state.loading = true;
       })
       .addCase(getUserTables.fulfilled, (state, action) => {
-        state.userTables = action.payload;
+        state.userTables = action.payload.tables;
+        state.user = action.payload.username;
         state.isAuthenticated = true;
         state.loading = false;
       })

@@ -40,6 +40,10 @@ const TableManager = () => {
     };
     fetchUsers();
 
+    return () => {
+      clearForm();
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

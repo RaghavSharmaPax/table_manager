@@ -150,6 +150,9 @@ const authenticate = async (userData: { username: string; password: string }) =>
  * @returns response
  */
 const logout = async () => postRequest("/user/logout", {});
+
+const signout = async () => postRequest("/user/signout", {});
+
 /**
  * signs a new user in
  * @param userData username password
@@ -166,6 +169,7 @@ export {
   fetchUserTables,
   authenticate,
   logout,
+  signout,
   createUser,
   setupInterceptor,
 };

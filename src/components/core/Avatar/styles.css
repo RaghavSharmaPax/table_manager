@@ -3,10 +3,10 @@
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  width: 50px;
-  overflow: hidden;
-  transition: width 250ms ease-out;
+  left: 0;
+  transition: left 250ms ease-out;
   cursor: pointer;
+  position: relative;
 }
 
 .avatar__img {
@@ -22,9 +22,51 @@
 }
 
 .avatar:hover {
-  width: 180px;
+  left: -130px;
 }
 
 .avatar:hover > .btn {
   visibility: visible;
+}
+
+.user_actions {
+  overflow: hidden;
+  position: absolute;
+  left: 130%;
+  top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 40px;
+  transition: max-height 500ms ease-out;
+}
+
+.user_actions > .btn:first-of-type > svg {
+  float: right;
+  margin-top: 3px;
+}
+
+.user_actions > .btn:not(:nth-of-type(1)) {
+  visibility: hidden;
+}
+
+.drop {
+  transition: max-height 500ms ease-in;
+  max-height: 200px;
+}
+.user_actions.drop > .btn:not(:nth-of-type(1)) {
+  visibility: visible;
+}
+
+@media screen and (max-width: 310px) {
+  .user_actions {
+    width: 0px;
+    transition: width 100ms ease-out, max-height 500ms ease-out;
+  }
+  .avatar:hover {
+    left: 0;
+  }
+  .avatar:hover > .user_actions {
+    width: 120px;
+  }
 }

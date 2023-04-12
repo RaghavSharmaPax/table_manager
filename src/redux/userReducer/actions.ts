@@ -4,6 +4,7 @@ import {
   createUser,
   fetchUserTables,
   logout,
+  signout,
 } from "../../api/axiosController";
 
 /**
@@ -37,6 +38,15 @@ const logoutUser = createAsyncThunk(
   }
 );
 
+const signoutUser = createAsyncThunk(
+  "user/signout",
+  async (_, { rejectWithValue }) => {
+    const { res, error } = await signout();
+    if (error) return rejectWithValue(error.response?.data || error.message);
+    return res.data;
+  }
+);
+
 /**
  *  async action to fetch the table names for the logged in user
  */
@@ -47,7 +57,7 @@ const getUserTables = createAsyncThunk(
 
     if (error) return rejectWithValue(error.response?.data || error.message);
 
-    return res.data.tables;
+    return res.data;
   }
 );
 
@@ -68,4 +78,10 @@ const createNewUser = createAsyncThunk(
   }
 );
 
-export { getUserTables, createNewUser, authenticateUser, logoutUser };
+export {
+  getUserTables,
+  createNewUser,
+  authenticateUser,
+  logoutUser,
+  signoutUser,
+};
