@@ -139,6 +139,9 @@ const getFilteredTable = (
     });
 };
 
+const doesTableExist = (userTables: UserTableType[], currName: string) =>
+  userTables.filter((table) => table.tableName === currName).length > 0;
+
 export {
   TagName,
   NotificationType,
@@ -146,5 +149,6 @@ export {
   getFilteredTable,
   updateRows,
   updateColumns,
+  doesTableExist,
 };
 export type { UserType, TableType, ResponseType, UserTableType };

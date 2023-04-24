@@ -4,7 +4,7 @@ import {
   updateColumns,
   updateRows,
 } from "../../utils/TableManager/utils";
-import { downloadTable, getTableData, postData } from "./actions";
+import { downloadTable, getTableData, postData, updloadTable } from "./actions";
 
 const initialState: {
   data: TableType;
@@ -110,6 +110,15 @@ const formReducer = createSlice({
       .addCase(getTableData.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
+      })
+      .addCase(updloadTable.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(updloadTable.fulfilled, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(updloadTable.rejected, (state, action) => {
+        state.loading = true;
       })
       .addCase(downloadTable.pending, (state, action) => {
         state.loading = true;

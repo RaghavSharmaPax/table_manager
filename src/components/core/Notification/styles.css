@@ -12,6 +12,7 @@
   top: 0px;
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1;
   animation: moveDown 1s ease-in forwards;
 }
 

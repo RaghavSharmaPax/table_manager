@@ -1,6 +1,5 @@
-import { updateTable } from "../../redux/formReducer/reducer";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import Input from "../core/Input/Input";
+import { useAppSelector } from "../../redux/hooks";
+import Cell from "./Cell";
 
 const CustomTable = () => {
   /**
@@ -11,16 +10,6 @@ const CustomTable = () => {
     state.form.data.table,
     state.form.toShow,
   ]);
-
-  const dispatch = useAppDispatch();
-
-  /**
-   * @function updateRowVal handles the changes to cells in a row and updates the table in the store
-   * @param e synthetic event
-   */
-  const updateRowVal = (newValue: string, rowIdx: number, colIdx: number) => {
-    dispatch(updateTable({ newValue, rowIdx, colIdx }));
-  };
 
   return (
     <div
@@ -35,15 +24,7 @@ const CustomTable = () => {
                 {row?.map((col, colIdx) =>
                   colIdx < toShow.cols ? (
                     <td key={`input ${rowIdx},${colIdx}`}>
-                      <Input
-                        type="text"
-                        label=""
-                        name={`${rowIdx},${colIdx}`}
-                        value={col}
-                        onChange={(e: any) =>
-                          updateRowVal(e.target.value, rowIdx, colIdx)
-                        }
-                      />
+                      <Cell rowIdx={rowIdx} colIdx={colIdx} value={col} />
                     </td>
                   ) : null
                 )}

@@ -40,7 +40,7 @@ const CredentialForm = ({
           name="username"
           label="Username"
           value={formState.username}
-          onChange={(e) => onFormChange(e.target.value, "username")}
+          onChange={(e: any) => onFormChange(e.target.value, "username")}
         />
         <Input
           type="password"

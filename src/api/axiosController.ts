@@ -5,7 +5,8 @@ import { createNotification } from "../redux/notificationReducer/reducer";
 import { NotificationType, TableType } from "../utils/TableManager/utils";
 
 axios.defaults.withCredentials = true;
-// axios.defaults.baseURL = "http://localhost:4000";
+axios.defaults.baseURL = "http://localhost:4000/api/v1";
+const authBaseUrl = "http://localhost:4000";
 
 /**
  * axios response interceptor
@@ -39,12 +40,10 @@ const setupInterceptor = (
     (error) => {
       // ask for this proxy error login
       const axiosError = error as AxiosError;
-      const data = axiosError.response?.data as string;
-      const isServerReachable = !data.includes("ECONNREFUSED");
-
+      const isServerReachable = !(axiosError.code === "ERR_NETWORK");
       if (!isServerReachable) {
         navigate("/login", { replace: true });
-        (error as AxiosError).response!.data = "Could not reach the server.";
+        axiosError.message = "Could not reach the server.";
       } else if (axiosError.response?.status === 401) {
         navigate("/login", { replace: true });
       }
@@ -59,9 +58,9 @@ const setupInterceptor = (
  * @param data request body data
  * @returns response
  */
-const postRequest = async (url: string, data: any) => {
+const postRequest = async (url: string, data: any, requestConfig?: any) => {
   try {
-    const res = await axios.post(url, data);
+    const res = await axios.post(url, data, requestConfig);
     return { res, error: null };
   } catch (error) {
     return { res: null, error: error as AxiosError };
@@ -90,9 +89,9 @@ const getRequest = async (url: string, params: { [key: string]: any }) => {
  * @returns response
  */
 
-const putRequest = async (url: string, data: any) => {
+const putRequest = async (url: string, data: any, config?: any) => {
   try {
-    const res = await axios.put(url, data);
+    const res = await axios.put(url, data, config);
     return { res, error: null };
   } catch (error) {
     return { res: null, error: error as AxiosError };
@@ -105,7 +104,7 @@ const putRequest = async (url: string, data: any) => {
  * @returns response
  */
 const createNewTable = async (tableData: TableType) =>
-  postRequest("/form/data", tableData);
+  postRequest("/table/create_data", tableData);
 
 /**
  * to update the user data
@@ -113,7 +112,7 @@ const createNewTable = async (tableData: TableType) =>
  * @returns response
  */
 const updateTableData = async (tableData: TableType) =>
-  putRequest("/form/data", tableData);
+  putRequest("/table/update_data", tableData);
 
 /**
  * to fetch user data from the server
@@ -121,7 +120,7 @@ const updateTableData = async (tableData: TableType) =>
  * @returns response
  */
 const fetchTableData = async (tableName: string) =>
-  getRequest("/form/data", { tableName });
+  getRequest("/table/table_data", { tableName });
 
 /**
  * fetches the user list
@@ -135,7 +134,21 @@ const fetchUserTables = async () => getRequest("/user/list_tables", {});
  * @returns response
  */
 const sendDownloadReq = async (tableName: string) =>
-  getRequest("/form/download", { tableName });
+  getRequest("/table/download", { tableName });
+
+const uploadReq = async (file: File, updateReq: boolean) => {
+  const formData = new FormData();
+  formData.append("data", file);
+  return updateReq
+    ? putRequest("/table/upload_table", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+    : postRequest("/table/upload_table", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+};
 
 /**
  * authenticates the users
@@ -143,7 +156,7 @@ const sendDownloadReq = async (tableName: string) =>
  * @returns response
  */
 const authenticate = async (userData: { username: string; password: string }) =>
-  postRequest("/authenticate", userData);
+  postRequest("/auth/authenticate", userData, { baseURL: authBaseUrl });
 
 /**
  * sends logout request to the server
@@ -159,13 +172,14 @@ const signout = async () => postRequest("/user/signout", {});
  * @returns response
  */
 const createUser = async (userData: { username: string; password: string }) =>
-  postRequest("/create_user", userData);
+  postRequest("/auth/create_user", userData, { baseURL: authBaseUrl });
 
 export {
   createNewTable,
   updateTableData,
   fetchTableData,
   sendDownloadReq,
+  uploadReq,
   fetchUserTables,
   authenticate,
   logout,

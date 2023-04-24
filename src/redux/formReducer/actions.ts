@@ -5,9 +5,14 @@ import {
   fetchTableData,
   sendDownloadReq,
   updateTableData,
+  uploadReq,
 } from "../../api/axiosController";
 
-import { getFilteredTable, validateData } from "../../utils/TableManager/utils";
+import {
+  doesTableExist,
+  getFilteredTable,
+  validateData,
+} from "../../utils/TableManager/utils";
 /**
  * action for sending form data to the server
  */
@@ -36,12 +41,9 @@ const postData = createAsyncThunk(
     };
 
     const userTables = state.user.userTables;
-    const doesTableExist =
-      userTables.filter((table) => table.tableName === filteredData.tableName)
-        .length > 0;
 
     // send apt request
-    const { res, error } = doesTableExist
+    const { res, error } = doesTableExist(userTables, filteredData.tableName)
       ? await updateTableData(filteredData)
       : await createNewTable(filteredData);
 
@@ -89,4 +91,19 @@ const downloadTable = createAsyncThunk(
   }
 );
 
-export { postData, getTableData, downloadTable };
+const updloadTable = createAsyncThunk(
+  "form/upload",
+  async (file: File, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
+    const userTables = state.user.userTables;
+
+    const { res, error } = doesTableExist(userTables, file.name.split(".")[0])
+      ? await uploadReq(file, true)
+      : await uploadReq(file, false);
+
+    if (error) return rejectWithValue(error.response?.data || error.message);
+    return res.data;
+  }
+);
+
+export { postData, getTableData, downloadTable, updloadTable };

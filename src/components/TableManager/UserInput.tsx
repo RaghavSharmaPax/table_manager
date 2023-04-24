@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
-import { getTableData } from "../../redux/formReducer/actions";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef, useState } from "react";
+import { getTableData, updloadTable } from "../../redux/formReducer/actions";
 import { clearState, updateTableName } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
+import { getUserTables } from "../../redux/userReducer/actions";
 import { NotificationType, TagName } from "../../utils/TableManager/utils";
 import Input from "../core/Input/Input";
 import Select from "../core/Select/Select";
@@ -21,6 +24,7 @@ const TableInput = () => {
   const { userTables } = useAppSelector((state) => state.user);
 
   const [tableSelected, setTableSelected] = useState("");
+  const fileUploadRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();
 
@@ -75,6 +79,28 @@ const TableInput = () => {
     dispatch(updateTableName(name));
   };
 
+  const handleUpload = async (e: any) => {
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+    const res = await dispatch(updloadTable(file));
+    fileUploadRef.current!.value = "";
+    if (res.meta.requestStatus === "rejected") {
+      return dispatch(
+        createNotification({
+          message: res.payload,
+          type: NotificationType.Error,
+        })
+      );
+    }
+    dispatch(
+      createNotification({
+        message: "File upload successful",
+        type: NotificationType.Valid,
+      })
+    );
+    dispatch(getUserTables());
+  };
+
   return (
     <div className="user_inputs">
       <Input
@@ -92,6 +118,18 @@ const TableInput = () => {
         onChange={onInputChange}
         label="Select Table"
       />
+
+      <div className="cta__file_upload">
+        <Input
+          ref={fileUploadRef}
+          type="file"
+          name="file_upload"
+          value={undefined}
+          label=""
+          onChange={handleUpload}
+        ></Input>
+        <FontAwesomeIcon icon={faUpload} />
+      </div>
     </div>
   );
 };
