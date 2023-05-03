@@ -1,19 +1,14 @@
 import { memo } from "react";
 import { updateTable } from "../../redux/formReducer/reducer";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import Input from "../core/Input/Input";
 
-const Cell = ({
-  rowIdx,
-  colIdx,
-  value,
-}: {
-  rowIdx: number;
-  colIdx: number;
-  value: string;
-}) => {
+const Cell = ({ rowIdx, colIdx }: { rowIdx: number; colIdx: number }) => {
   const dispatch = useAppDispatch();
+  const value = useAppSelector(
+    (state) => state.form.data.table[rowIdx][colIdx]
+  );
 
   /**
    * @function updateRowVal handles the changes to cells in a row and updates the table in the store

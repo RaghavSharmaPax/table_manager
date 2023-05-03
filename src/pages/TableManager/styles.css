@@ -61,9 +61,12 @@
 
 .custom_table {
   width: 100%;
+  padding: 20px;
   overflow: auto;
+  scroll-snap-type: y mandatory;
   max-height: calc(100vh * 0.4);
 }
+
 /* 
 @media only screen and (max-width: 570px) {
   .custom_table {

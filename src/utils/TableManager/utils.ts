@@ -64,18 +64,13 @@ const updateRows = (
   if (prev_rows - new_rows > 0)
     // new rows are less than prev rows; show less rows
     toShow.rows -= prev_rows - new_rows;
-  else if (prev_rows - new_rows < 0 && toShow.rows === prev_rows)
+  else if (prev_rows - new_rows < 0 && toShow.rows === prev_rows) {
     // new rows are more than prev rows; add more rows
     for (let i = 0; i < Math.abs(prev_rows - new_rows); ++i) {
-      const row = [];
-      for (let j = 0; j < cols; ++j) {
-        row.push("");
-      }
-      table.push(row);
-
-      toShow.rows = new_rows;
+      table.push(Array(cols).fill(""));
     }
-  else toShow.rows += prev_rows - new_rows;
+    toShow.rows = new_rows;
+  } else toShow.rows += prev_rows - new_rows;
 };
 
 /**
@@ -97,11 +92,10 @@ const updateColumns = (
     toShow.cols -= prev_cols - new_cols;
   } else if (prev_cols - new_cols < 0 && toShow.cols === prev_cols) {
     // new cols more than prev cols; push new cols in each row
-    for (let row of table) {
-      for (let i = 1; i <= Math.abs(prev_cols - new_cols); ++i) {
-        row.push("");
-      }
-    }
+    const colsToAdd = Math.abs(prev_cols - new_cols);
+    table.forEach(
+      (row, index) => (table[index] = row.concat(Array(colsToAdd).fill("")))
+    );
     toShow.cols = new_cols;
   } else toShow.cols += prev_cols - new_cols;
 };
@@ -142,6 +136,15 @@ const getFilteredTable = (
 const doesTableExist = (userTables: UserTableType[], currName: string) =>
   userTables.filter((table) => table.tableName === currName).length > 0;
 
+const mapToAlpha = (key: number) => {
+  let alpha = "";
+  while (key >= 0) {
+    alpha = String.fromCharCode((key % 26) + 65) + alpha;
+    key = Math.floor(key / 26) - 1;
+  }
+  return alpha;
+};
+
 export {
   TagName,
   NotificationType,
@@ -150,5 +153,6 @@ export {
   updateRows,
   updateColumns,
   doesTableExist,
+  mapToAlpha,
 };
 export type { UserType, TableType, ResponseType, UserTableType };
