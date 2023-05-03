@@ -17,10 +17,7 @@ const TableInput = () => {
    * @var users fetch and store the userlist from the store
    * @var userSelected to manage the user dropdown list
    */
-  const { tableName, error: form_error } = useAppSelector((state) => ({
-    tableName: state.form.data.tableName,
-    error: state.form.error as string,
-  }));
+  const tableName = useAppSelector((state) => state.form.data.tableName);
   const { userTables } = useAppSelector((state) => state.user);
 
   const [tableSelected, setTableSelected] = useState("");
@@ -106,7 +103,6 @@ const TableInput = () => {
   return (
     <div className="user_inputs">
       <Input
-        error={form_error}
         type="text"
         label="Table Name"
         value={tableName}
