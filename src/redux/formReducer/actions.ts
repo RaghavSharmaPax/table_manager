@@ -32,10 +32,10 @@ const postData = createAsyncThunk(
     // get filterer table
     const filteredTable = getFilteredTable(data.table, toShow);
     const filteredData = {
-      ...data,
+      tableName: data.tableName,
       dimensions: {
         rows: filteredTable.length,
-        cols: filteredTable[0]?.length,
+        cols: filteredTable[0]?.length || 0,
       },
       table: filteredTable,
     };
@@ -83,7 +83,7 @@ const downloadTable = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     const state = getState() as RootState;
     const tableId = state.form.data._id;
-    const { res, error } = await sendDownloadReq(tableId);
+    const { res, error } = await sendDownloadReq(tableId!);
 
     if (error) return rejectWithValue(error.response?.data || error.message);
 

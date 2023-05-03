@@ -61,20 +61,19 @@ const TableInput = () => {
    * @param e  synthetic event
    */
   const onInputChange = (e: any) => {
-    const tableId = e.target.value;
+    const value = e.target.value;
 
     if (e.target.name === TagName.TableSelect) {
-      setTableSelected(tableId);
+      setTableSelected(value);
       // if "" was selected clear the form
-      if (!tableId) return dispatch(clearState());
+      if (!value) return dispatch(clearState());
 
       // fetch the form data for the given user
       // dispatch(getFormData(name));
-      fetchTableData(tableId);
+      fetchTableData(value);
     }
-    const tableName = userTables.find(
-      (table) => table._id === tableId
-    )!.tableName;
+    const tableName =
+      userTables.find((table) => table._id === value)?.tableName || value;
     dispatch(updateTableName(tableName));
   };
 
@@ -122,7 +121,7 @@ const TableInput = () => {
           ref={fileUploadRef}
           type="file"
           name="file_upload"
-          value={undefined}
+          value=""
           label=""
           onChange={handleUpload}
         ></Input>

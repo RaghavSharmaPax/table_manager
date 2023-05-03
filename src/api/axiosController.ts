@@ -104,7 +104,7 @@ const putRequest = async (url: string, data: any, config?: any) => {
  * @returns response
  */
 const createNewTable = async (tableData: TableType) =>
-  postRequest("/table/create_data", tableData);
+  postRequest("/table/create_table", tableData);
 
 /**
  * to update the user data

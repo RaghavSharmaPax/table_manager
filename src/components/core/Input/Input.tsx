@@ -15,7 +15,7 @@ const Input = forwardRef<HTMLInputElement, any>(
       error?: string;
       name: string;
       label: string;
-      value?: any;
+      value: string | number;
       onChange: (e: any) => void;
       min?: number;
     },
