@@ -65,8 +65,8 @@ const getTableData = createAsyncThunk(
    * @param name username selected
    * @returns userdata as response
    */
-  async (name: string, { rejectWithValue }) => {
-    const { res, error } = await fetchTableData(name);
+  async (tableId: string, { rejectWithValue }) => {
+    const { res, error } = await fetchTableData(tableId);
 
     if (error) return rejectWithValue(error.response?.data || error.message);
 
@@ -82,8 +82,8 @@ const downloadTable = createAsyncThunk(
   "form/download",
   async (_, { getState, rejectWithValue }) => {
     const state = getState() as RootState;
-    const tableName = state.form.data.tableName;
-    const { res, error } = await sendDownloadReq(tableName);
+    const tableId = state.form.data._id;
+    const { res, error } = await sendDownloadReq(tableId);
 
     if (error) return rejectWithValue(error.response?.data || error.message);
 

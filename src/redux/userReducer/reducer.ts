@@ -65,7 +65,10 @@ const userReducer = createSlice({
         state.loading = true;
       })
       .addCase(getUserTables.fulfilled, (state, action) => {
-        state.userTables = action.payload.tables;
+        state.userTables = [].concat(
+          action.payload.tables,
+          action.payload.sharedTables
+        );
         state.user = action.payload.username;
         state.isAuthenticated = true;
         state.loading = false;

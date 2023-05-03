@@ -27,11 +27,7 @@ const Select = ({
           Clear Table
         </option>
         {data?.map((item: any) => (
-          <option
-            data-testid="test_option"
-            key={item._id}
-            value={item.tableName}
-          >
+          <option data-testid="test_option" key={item._id} value={item._id}>
             {item.tableName}
           </option>
         ))}

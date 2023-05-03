@@ -11,6 +11,7 @@ const initialState: {
   [key: string]: any;
 } = {
   data: {
+    _id: "",
     tableName: "",
     dimensions: { rows: 0, cols: 0 },
     table: [],
@@ -76,6 +77,7 @@ const formReducer = createSlice({
      */
     clearState(state) {
       state.data = {
+        _id: "",
         tableName: "",
         dimensions: { rows: 0, cols: 0 },
         table: [],

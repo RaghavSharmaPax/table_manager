@@ -4,6 +4,7 @@ import { AxiosResponse, AxiosError } from "axios";
  * @type FormType for the main state and the type of data for api
  */
 type TableType = {
+  _id: string;
   tableName: string;
   dimensions: { rows: number; cols: number };
   table: string[][];

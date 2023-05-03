@@ -35,8 +35,8 @@ const TableInput = () => {
     if (!tableName) setTableSelected("");
   }, [tableName]);
 
-  const fetchTableData = async (name: string) => {
-    const res = await dispatch(getTableData(name));
+  const fetchTableData = async (tableId: string) => {
+    const res = await dispatch(getTableData(tableId));
     if (res.meta.requestStatus === "rejected") {
       return dispatch(
         createNotification({
@@ -64,19 +64,21 @@ const TableInput = () => {
    * @param e  synthetic event
    */
   const onInputChange = (e: any) => {
-    const name = e.target.value;
+    const tableId = e.target.value;
 
     if (e.target.name === TagName.TableSelect) {
-      setTableSelected(name);
+      setTableSelected(tableId);
       // if "" was selected clear the form
-      if (!name) return dispatch(clearState());
+      if (!tableId) return dispatch(clearState());
 
       // fetch the form data for the given user
       // dispatch(getFormData(name));
-      fetchTableData(name);
+      fetchTableData(tableId);
     }
-
-    dispatch(updateTableName(name));
+    const tableName = userTables.find(
+      (table) => table._id === tableId
+    )!.tableName;
+    dispatch(updateTableName(tableName));
   };
 
   const handleUpload = async (e: any) => {

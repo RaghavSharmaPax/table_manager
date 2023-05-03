@@ -19,6 +19,7 @@ const defState: {
   [key: string]: any;
 } = {
   data: {
+    _id: "",
     tableName: "",
     dimensions: { rows: 0, cols: 0 },
     table: [],

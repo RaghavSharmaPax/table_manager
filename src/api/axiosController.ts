@@ -112,15 +112,15 @@ const createNewTable = async (tableData: TableType) =>
  * @returns response
  */
 const updateTableData = async (tableData: TableType) =>
-  putRequest("/table/update_data", tableData);
+  putRequest("/table/update_table", tableData);
 
 /**
  * to fetch user data from the server
  * @param username string
  * @returns response
  */
-const fetchTableData = async (tableName: string) =>
-  getRequest("/table/table_data", { tableName });
+const fetchTableData = async (tableId: string) =>
+  getRequest("/table/table_data", { tableId });
 
 /**
  * fetches the user list
@@ -130,11 +130,11 @@ const fetchUserTables = async () => getRequest("/user/list_tables", {});
 
 /**
  * sends request to the backend to download table
- * @param tableName table name to download
+ * @param tableId table id to download
  * @returns response
  */
-const sendDownloadReq = async (tableName: string) =>
-  getRequest("/table/download", { tableName });
+const sendDownloadReq = async (tableId: string) =>
+  getRequest("/table/download", { tableId });
 
 const uploadReq = async (file: File, updateReq: boolean) => {
   const formData = new FormData();
