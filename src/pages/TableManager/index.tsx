@@ -1,24 +1,39 @@
 import download from "downloadjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/core/Button";
 
 import CustomTable from "../../components/TableManager/CustomTable";
 import DimensionInput from "../../components/TableManager/DimensionInput";
 import UserInput from "../../components/TableManager/UserInput";
+import Modal from "../../components/core/Modal";
 
-import { faDownload, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDownload,
+  faFloppyDisk,
+  faShareNodes,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ModalUserSelect from "../../components/TableManager/ModalUserSelect";
 import { downloadTable, postData } from "../../redux/formReducer/actions";
 import { clearState } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
-import { getUserTables } from "../../redux/userReducer/actions";
+import {
+  getUserList,
+  getUserTables,
+  shareTable,
+} from "../../redux/userReducer/actions";
 import { NotificationType } from "../../utils/TableManager/utils";
 import "./styles.css";
 
 const TableManager = () => {
+  /**
+   * @var activeTable stores the tablename of the current table being viewed
+   * @var showModal governs if the modal should be displayed on the screen; defaults to false
+   */
   const dispatch = useAppDispatch();
   const activeTable = useAppSelector((state) => state.form.data.tableName);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     /**
@@ -110,6 +125,39 @@ const TableManager = () => {
     download(res.payload, activeTable + ".csv", "text/csv");
   };
 
+  /**
+   * displays the modal when the user clicks the share button
+   * @returns void
+   */
+  const onShare = async () => {
+    const res = await dispatch(getUserList());
+    if (res.meta.requestStatus === "rejected")
+      return dispatch(
+        createNotification({
+          message: "Users could not be fetched. Try again later.",
+          type: NotificationType.Error,
+        })
+      );
+
+    setShowModal(true);
+  };
+
+  /**
+   * sends the share data to the server and closes the modal
+   * @param data share data containing list of users, tableId and viewMode for the share
+   */
+  const handleShareSubmit = async (data: any) => {
+    const res = await dispatch(shareTable(data));
+    if (res.meta.requestStatus === "rejected")
+      dispatch(
+        createNotification({
+          message: "Could not share the table. Try again later.",
+          type: NotificationType.Error,
+        })
+      );
+    setShowModal(false);
+  };
+
   return (
     <div className="table_manager">
       <UserInput />
@@ -122,7 +170,20 @@ const TableManager = () => {
         <Button type="button" text="Download" onClick={onDownload}>
           <FontAwesomeIcon icon={faDownload} />
         </Button>
+        <Button type="button" text="Share" onClick={onShare}>
+          <FontAwesomeIcon icon={faShareNodes} />
+        </Button>
       </div>
+
+      {showModal && (
+        <Modal title="Select Users" closeModal={() => setShowModal(false)}>
+          <ModalUserSelect
+            onShareSubmit={(data: any) => {
+              handleShareSubmit(data);
+            }}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

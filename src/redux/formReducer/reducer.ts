@@ -14,6 +14,8 @@ const initialState: {
     _id: "",
     tableName: "",
     dimensions: { rows: 0, cols: 0 },
+    owner: "",
+    viewMode: "write",
     table: [],
   },
   toShow: {
@@ -80,6 +82,7 @@ const formReducer = createSlice({
         _id: "",
         tableName: "",
         dimensions: { rows: 0, cols: 0 },
+        viewMode: "write",
         table: [],
       };
       state.toShow = {

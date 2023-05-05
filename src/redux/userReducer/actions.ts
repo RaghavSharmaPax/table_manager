@@ -5,7 +5,10 @@ import {
   fetchUserTables,
   logout,
   signout,
+  getUsers,
+  share,
 } from "../../api/axiosController";
+import { RootState } from "..";
 
 /**
  * async action authenticate user
@@ -37,6 +40,10 @@ const logoutUser = createAsyncThunk(
     return res.data;
   }
 );
+
+/**
+ * async action to sign the user out of the app
+ */
 
 const signoutUser = createAsyncThunk(
   "user/signout",
@@ -78,10 +85,40 @@ const createNewUser = createAsyncThunk(
   }
 );
 
+/**
+ * async action to get the list of users from the server
+ */
+const getUserList = createAsyncThunk(
+  "user/getUsers",
+  async (_, { rejectWithValue }) => {
+    const { res, error } = await getUsers();
+    if (error) return rejectWithValue(error.response?.data || error.message);
+    return res.data;
+  }
+);
+
+/**
+ * async action to send the share table data to the server
+ */
+const shareTable = createAsyncThunk(
+  "form/share",
+  async (data: any, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
+    const { res, error } = await share({
+      ...data,
+      tableId: state.form.data._id,
+    });
+    if (error) return rejectWithValue(error.response?.data || error.message);
+    return res.data;
+  }
+);
+
 export {
   getUserTables,
+  shareTable,
   createNewUser,
   authenticateUser,
   logoutUser,
   signoutUser,
+  getUserList,
 };

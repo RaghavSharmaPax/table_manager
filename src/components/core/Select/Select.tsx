@@ -1,4 +1,7 @@
-import { UserTableType } from "../../../utils/TableManager/utils";
+import {
+  SharedTableType,
+  UserTableType,
+} from "../../../utils/TableManager/utils";
 import "./styles.css";
 const Select = ({
   data,
@@ -7,7 +10,7 @@ const Select = ({
   label,
   onChange,
 }: {
-  data: UserTableType[];
+  data: { own: UserTableType[]; shared: SharedTableType[] };
   value: string;
   name: string;
   label: string;
@@ -23,12 +26,23 @@ const Select = ({
         name={name}
         onChange={onChange}
       >
-        <option value="" data-testid="test_option">
+        <option className="option__default" value="" data-testid="test_option">
           Clear Table
         </option>
-        {data?.map((item: any) => (
+        {data.own.map((item: UserTableType) => (
           <option data-testid="test_option" key={item._id} value={item._id}>
             {item.tableName}
+          </option>
+        ))}
+        {data.shared.map((item: SharedTableType) => (
+          <option
+            className="option__shared"
+            data-testid="test_option"
+            key={item._id}
+            value={item._id}
+            data-sharedby={item.owner}
+          >
+            {item.tableName} (--{item.owner})
           </option>
         ))}
       </select>

@@ -21,6 +21,7 @@ const defState: {
   data: {
     _id: "",
     tableName: "",
+    viewMode: "write",
     dimensions: { rows: 0, cols: 0 },
     table: [],
   },

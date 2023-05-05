@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { NavigateFunction } from "react-router-dom";
 import { AppDispatch } from "../redux";
 import { createNotification } from "../redux/notificationReducer/reducer";
-import { NotificationType, TableType } from "../utils/TableManager/utils";
+import { NotificationType } from "../utils/TableManager/utils";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4000/api/v1";
@@ -99,11 +99,25 @@ const putRequest = async (url: string, data: any, config?: any) => {
 };
 
 /**
+ * api request to get the list of all the users
+ * @returns resposne from the server
+ */
+const getUsers = async () => await getRequest("/user/users", {});
+
+/**
+ * sends the table data to be shared and the list of users to be shared with
+ * @param data tableData
+ * @returns response
+ */
+const share = async (data: any) =>
+  await postRequest("/user/share_table", { ...data });
+
+/**
  * creates a new table entry at the backend
  * @param tableData table data
  * @returns response
  */
-const createNewTable = async (tableData: TableType) =>
+const createNewTable = async (tableData: any) =>
   postRequest("/table/create_table", tableData);
 
 /**
@@ -111,7 +125,7 @@ const createNewTable = async (tableData: TableType) =>
  * @param formData user form data
  * @returns response
  */
-const updateTableData = async (tableData: TableType) =>
+const updateTableData = async (tableData: any) =>
   putRequest("/table/update_table", tableData);
 
 /**
@@ -164,6 +178,10 @@ const authenticate = async (userData: { username: string; password: string }) =>
  */
 const logout = async () => postRequest("/user/logout", {});
 
+/**
+ * api request to delete the user from the application db
+ * @returns signout
+ */
 const signout = async () => postRequest("/user/signout", {});
 
 /**
@@ -186,4 +204,6 @@ export {
   signout,
   createUser,
   setupInterceptor,
+  getUsers,
+  share,
 };

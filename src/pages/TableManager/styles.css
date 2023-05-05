@@ -61,7 +61,7 @@
 
 .custom_table {
   width: 100%;
-  padding: 20px;
+  padding: 20px 20px 20px 0px;
   overflow: auto;
   scroll-snap-type: y mandatory;
   max-height: calc(100vh * 0.4);
@@ -82,7 +82,7 @@
   min-width: 150px;
 }
 
-.table_manager .btn {
+.table_manager > .btn {
   max-width: 500px;
   margin: 0px auto;
 }

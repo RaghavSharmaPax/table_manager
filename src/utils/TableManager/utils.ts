@@ -1,4 +1,4 @@
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 /**
  * @type FormType for the main state and the type of data for api
@@ -6,7 +6,9 @@ import { AxiosResponse, AxiosError } from "axios";
 type TableType = {
   _id?: string;
   tableName: string;
+  owner?: string;
   dimensions: { rows: number; cols: number };
+  viewMode: "read" | "write";
   table: string[][];
 };
 
@@ -32,11 +34,22 @@ enum NotificationType {
 }
 
 /**
- * @type UserTable
+ * @type UserTable for object of the owned tables
  */
 type UserTableType = {
   tableName: string;
   _id: string;
+  viewMode: "read" | "write";
+};
+
+/**
+ * @type SharedTable for object of the shared tables
+ */
+type SharedTableType = {
+  tableName: string;
+  _id: string;
+  owner: string;
+  viewMode: "read" | "write";
 };
 
 /**
@@ -134,9 +147,24 @@ const getFilteredTable = (
     });
 };
 
-const doesTableExist = (userTables: UserTableType[], currName: string) =>
-  userTables.filter((table) => table.tableName === currName).length > 0;
+/**
+ * checks if a table object with given param has the given value and return a boolean value
+ * @param userTables list of tables
+ * @param param parametr of table object to check against
+ * @param value value of the param to check with
+ * @returns boolean
+ */
+const doesTableExist = (
+  userTables: UserTableType[],
+  param: keyof UserTableType,
+  value: string
+) => userTables.filter((table) => table[param] === value).length > 0;
 
+/**
+ * encodes the cell col number to corresponding alpha string 1-A 2-B...
+ * @param key cell number
+ * @returns string
+ */
 const mapToAlpha = (key: number) => {
   let alpha = "";
   while (key >= 0) {
@@ -156,4 +184,10 @@ export {
   doesTableExist,
   mapToAlpha,
 };
-export type { UserType, TableType, ResponseType, UserTableType };
+export type {
+  UserType,
+  TableType,
+  ResponseType,
+  UserTableType,
+  SharedTableType,
+};

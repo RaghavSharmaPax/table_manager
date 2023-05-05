@@ -1,19 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserTableType } from "../../utils/TableManager/utils";
+import {
+  SharedTableType,
+  UserTableType,
+  UserType,
+} from "../../utils/TableManager/utils";
 import {
   authenticateUser,
   createNewUser,
+  getUserList,
   getUserTables,
   logoutUser,
   signoutUser,
 } from "./actions";
 
+const defaultUserTables = { own: [], shared: [] };
+
 const userReducer = createSlice({
   name: "user",
   initialState: {
     user: "",
+    users: [] as UserType[],
     isAuthenticated: false,
-    userTables: [] as UserTableType[],
+    userTables: { own: [], shared: [] } as {
+      own: UserTableType[];
+      shared: SharedTableType[];
+    },
     loading: false,
     error: "",
   },
@@ -40,7 +51,7 @@ const userReducer = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.user = "";
-        state.userTables = [] as UserTableType[];
+        state.userTables = defaultUserTables;
         state.error = "";
       })
       .addCase(logoutUser.rejected, (state, action) => {
@@ -54,7 +65,7 @@ const userReducer = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.user = "";
-        state.userTables = [] as UserTableType[];
+        state.userTables = defaultUserTables;
         state.error = "";
       })
       .addCase(signoutUser.rejected, (state, action) => {
@@ -65,10 +76,33 @@ const userReducer = createSlice({
         state.loading = true;
       })
       .addCase(getUserTables.fulfilled, (state, action) => {
-        state.userTables = [].concat(
-          action.payload.tables,
-          action.payload.sharedTables
+        const rawSharedTables = action.payload.sharedTables;
+        const formattedSharedTables: SharedTableType[] = rawSharedTables.map(
+          (table: {
+            id: {
+              _id: string;
+              tableName: string;
+              owner: { _id: string; username: string };
+            };
+            viewMode: "read" | "write";
+            _id: string;
+          }): SharedTableType => ({
+            _id: table.id._id,
+            tableName: table.id.tableName,
+            owner: table.id.owner.username,
+            viewMode: table.viewMode,
+          })
         );
+
+        state.userTables = {
+          own: action.payload.tables.map(
+            (table: { _id: string; tableName: string }): UserTableType => ({
+              ...table,
+              viewMode: "write",
+            })
+          ),
+          shared: formattedSharedTables,
+        };
         state.user = action.payload.username;
         state.isAuthenticated = true;
         state.loading = false;
@@ -85,6 +119,16 @@ const userReducer = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(createNewUser.rejected, (state, _action) => {
+        state.isAuthenticated = false;
+      })
+      .addCase(getUserList.pending, (state, _action) => {
+        state.loading = true;
+      })
+      .addCase(getUserList.fulfilled, (state, action) => {
+        state.users = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(getUserList.rejected, (state, _action) => {
         state.isAuthenticated = false;
       });
   },

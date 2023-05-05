@@ -20,6 +20,7 @@ const postData = createAsyncThunk(
   "form/post",
   async (_, { getState, rejectWithValue }) => {
     const state = getState() as RootState;
+
     const { data, toShow } = state.form;
 
     // checking if the data is valid
@@ -42,8 +43,17 @@ const postData = createAsyncThunk(
 
     const userTables = state.user.userTables;
 
+    /**
+     * checks if the table has an id
+     * if it has an id two cases are possible 1. hisOwnTable 2. sharedTable
+     * for case 1 if table exists in own array then update table values; if table does not exist create a table for him
+     * for case 2 it will not be in the own array and we will create a new table
+     */
+    const isTableOwned =
+      data._id && doesTableExist(userTables.own, "_id", data._id);
+
     // send apt request
-    const { res, error } = doesTableExist(userTables, filteredData.tableName)
+    const { res, error } = isTableOwned
       ? await updateTableData(filteredData)
       : await createNewTable(filteredData);
 
@@ -65,12 +75,20 @@ const getTableData = createAsyncThunk(
    * @param name username selected
    * @returns userdata as response
    */
-  async (tableId: string, { rejectWithValue }) => {
+  async (tableId: string, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
     const { res, error } = await fetchTableData(tableId);
+
+    const isTableOwned = doesTableExist(
+      state.user.userTables.own,
+      "_id",
+      tableId
+    );
 
     if (error) return rejectWithValue(error.response?.data || error.message);
 
-    return res.data;
+    if (isTableOwned) return { ...res.data, viewMode: "write" };
+    return { ...res.data, viewMode: "read" };
   }
 );
 
@@ -91,13 +109,21 @@ const downloadTable = createAsyncThunk(
   }
 );
 
+/**
+ * async action to upload the file to the server
+ */
+
 const updloadTable = createAsyncThunk(
   "form/upload",
   async (file: File, { rejectWithValue, getState }) => {
     const state = getState() as RootState;
     const userTables = state.user.userTables;
 
-    const { res, error } = doesTableExist(userTables, file.name.split(".")[0])
+    const { res, error } = doesTableExist(
+      userTables.own,
+      "tableName",
+      file.name.split(".")[0]
+    )
       ? await uploadReq(file, true)
       : await uploadReq(file, false);
 

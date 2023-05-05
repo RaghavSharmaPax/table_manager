@@ -10,6 +10,7 @@ const Input = forwardRef<HTMLInputElement, any>(
       value,
       onChange,
       min,
+      disable = false,
     }: {
       type: string;
       error?: string;
@@ -18,6 +19,7 @@ const Input = forwardRef<HTMLInputElement, any>(
       value: string | number;
       onChange: (e: any) => void;
       min?: number;
+      disable?: boolean;
     },
     ref
   ) => {
@@ -25,6 +27,7 @@ const Input = forwardRef<HTMLInputElement, any>(
       <div className="input">
         <label>{label}</label>
         <input
+          disabled={disable}
           data-testid="test_input"
           type={type}
           value={value}

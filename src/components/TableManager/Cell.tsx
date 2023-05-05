@@ -4,7 +4,15 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 import Input from "../core/Input/Input";
 
-const Cell = ({ rowIdx, colIdx }: { rowIdx: number; colIdx: number }) => {
+const Cell = ({
+  rowIdx,
+  colIdx,
+  viewMode,
+}: {
+  rowIdx: number;
+  colIdx: number;
+  viewMode: "read" | "write";
+}) => {
   const dispatch = useAppDispatch();
   const value = useAppSelector(
     (state) => state.form.data.table[rowIdx][colIdx]
@@ -19,6 +27,7 @@ const Cell = ({ rowIdx, colIdx }: { rowIdx: number; colIdx: number }) => {
   };
   return (
     <Input
+      disable={viewMode === "read"}
       type="text"
       label=""
       name={`${rowIdx},${colIdx}`}

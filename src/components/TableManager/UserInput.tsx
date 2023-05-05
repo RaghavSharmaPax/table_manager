@@ -12,10 +12,10 @@ import Select from "../core/Select/Select";
 
 const TableInput = () => {
   /**
-   * @var username fetch and store the username from the store
-   * @var error fetch and store any error occurred during form submission
-   * @var users fetch and store the userlist from the store
-   * @var userSelected to manage the user dropdown list
+   * @var tableName store observer to monitor the value of the table name input field
+   * @var userTables store observer to montior the list of table that the user owns and shared with them
+   * @var tableSelected state holds the value of the Select dropdown
+   * @var fileUploadRef holds the reference to the file update input to extract the file from
    */
   const tableName = useAppSelector((state) => state.form.data.tableName);
   const { userTables } = useAppSelector((state) => state.user);
@@ -32,6 +32,11 @@ const TableInput = () => {
     if (!tableName) setTableSelected("");
   }, [tableName]);
 
+  /**
+   * fetches the table data based on the table id and generates a notification accordingly
+   * @param tableId id string of table
+   * @returns void
+   */
   const fetchTableData = async (tableId: string) => {
     const res = await dispatch(getTableData(tableId));
     if (res.meta.requestStatus === "rejected") {
@@ -51,32 +56,32 @@ const TableInput = () => {
   };
 
   /**
-   * @function onInputChange
-   * manages the changes made to the user select list and user input
-   * if user is selected from the dropdown @var userSelected is updated
-   * and form data for the user is fetched
-   *
-   * if userInput is changed, @var username is updated
-   *
-   * @param e  synthetic event
+   * updates the value of the tablename
+   * @param e onChange event on the input tablename input tag
    */
   const onInputChange = (e: any) => {
     const value = e.target.value;
-
-    if (e.target.name === TagName.TableSelect) {
-      setTableSelected(value);
-      // if "" was selected clear the form
-      if (!value) return dispatch(clearState());
-
-      // fetch the form data for the given user
-      // dispatch(getFormData(name));
-      fetchTableData(value);
-    }
-    const tableName =
-      userTables.find((table) => table._id === value)?.tableName || value;
-    dispatch(updateTableName(tableName));
+    dispatch(updateTableName(value));
   };
 
+  /**
+   * calls a function to get the data of the table with the given id and populate the UI
+   * @param e onChange event on the table select tag
+   * @returns void
+   */
+  const onSelectChange = (e: any) => {
+    const value = e.target.value;
+    setTableSelected(value);
+    if (!value) return dispatch(clearState());
+
+    fetchTableData(value);
+  };
+
+  /**
+   *extracts the file using the @var fileUploadRef and passes it along to be sent to the server and generates a notification accordingly
+   * @param e onChange event when the users uploads a file
+   * @returns void
+   */
   const handleUpload = async (e: any) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
@@ -112,7 +117,7 @@ const TableInput = () => {
         data={userTables}
         value={tableSelected}
         name={TagName.TableSelect}
-        onChange={onInputChange}
+        onChange={onSelectChange}
         label="Select Table"
       />
 
