@@ -5,8 +5,8 @@ import { createNotification } from "../redux/notificationReducer/reducer";
 import { NotificationType } from "../utils/TableManager/utils";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:4000/api/v1";
-const authBaseUrl = "http://localhost:4000";
+axios.defaults.baseURL = process.env.REACT_APP_SERVICE_ROUTE;
+const authBaseUrl = process.env.REACT_APP_AUTH_ROUTE;
 
 /**
  * axios response interceptor
