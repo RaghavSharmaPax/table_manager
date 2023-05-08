@@ -81,19 +81,30 @@
 .custom_table .input {
   min-width: 150px;
 }
+.table_actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.table_actions > .btn {
+  width: min-content;
+  background-color: transparent;
+  color: #1890ff;
+  border: 1px solid #1890ff;
+}
 
-.table_manager > .btn {
-  max-width: 500px;
-  margin: 0px auto;
+.table_actions > .btn:hover {
+  background-color: #1890ff;
+  color: white;
+}
+
+.table_actions > .btn > .svg-inline--fa {
+  margin: 0;
 }
 
 .table_manager__cta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: 10px;
-  max-width: 500px;
+  width: 25%;
+  max-width: 250px;
 }
 
 @media screen and (max-width: 450px) {

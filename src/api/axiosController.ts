@@ -192,6 +192,9 @@ const signout = async () => postRequest("/user/signout", {});
 const createUser = async (userData: { username: string; password: string }) =>
   postRequest("/auth/create_user", userData, { baseURL: authBaseUrl });
 
+const deleteTable = async (tableId: string) =>
+  postRequest("/table/delete_table", { tableId });
+
 export {
   createNewTable,
   updateTableData,
@@ -206,4 +209,5 @@ export {
   setupInterceptor,
   getUsers,
   share,
+  deleteTable,
 };

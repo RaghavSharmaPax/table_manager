@@ -27,7 +27,7 @@ const Select = ({
         onChange={onChange}
       >
         <option className="option__default" value="" data-testid="test_option">
-          Clear Table
+          Clear Choice
         </option>
         {data.own.map((item: UserTableType) => (
           <option data-testid="test_option" key={item._id} value={item._id}>

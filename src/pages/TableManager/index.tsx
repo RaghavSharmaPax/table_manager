@@ -11,10 +11,15 @@ import {
   faDownload,
   faFloppyDisk,
   faShareNodes,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ModalUserSelect from "../../components/TableManager/ModalUserSelect";
-import { downloadTable, postData } from "../../redux/formReducer/actions";
+import {
+  deleteTableById,
+  downloadTable,
+  postData,
+} from "../../redux/formReducer/actions";
 import { clearState } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
@@ -33,6 +38,7 @@ const TableManager = () => {
    */
   const dispatch = useAppDispatch();
   const activeTable = useAppSelector((state) => state.form.data.tableName);
+  const isTableActionable = useAppSelector((state) => !!state.form.data._id);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -158,20 +164,40 @@ const TableManager = () => {
     setShowModal(false);
   };
 
+  const onDelete = async () => {
+    const res = await dispatch(deleteTableById());
+    if (res.meta.requestStatus === "rejected") {
+      dispatch(
+        createNotification({
+          message: res.payload,
+          type: NotificationType.Error,
+        })
+      );
+    }
+    dispatch(clearState());
+    dispatch(getUserTables());
+  };
   return (
     <div className="table_manager">
       <UserInput />
       <DimensionInput />
+      {isTableActionable && (
+        <div className="table_actions">
+          <Button type="button" text="" onClick={onDownload}>
+            <FontAwesomeIcon icon={faDownload} />
+          </Button>
+          <Button type="button" text="" onClick={onShare}>
+            <FontAwesomeIcon icon={faShareNodes} />
+          </Button>
+          <Button type="button" text="" onClick={onDelete}>
+            <FontAwesomeIcon icon={faTrash} />
+          </Button>
+        </div>
+      )}
       <CustomTable />
       <div className="table_manager__cta">
         <Button type="submit" text="Save" onClick={onSubmit}>
           <FontAwesomeIcon icon={faFloppyDisk} />
-        </Button>
-        <Button type="button" text="Download" onClick={onDownload}>
-          <FontAwesomeIcon icon={faDownload} />
-        </Button>
-        <Button type="button" text="Share" onClick={onShare}>
-          <FontAwesomeIcon icon={faShareNodes} />
         </Button>
       </div>
 

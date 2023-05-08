@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import {
   createNewTable,
+  deleteTable,
   fetchTableData,
   sendDownloadReq,
   updateTableData,
@@ -132,4 +133,19 @@ const updloadTable = createAsyncThunk(
   }
 );
 
-export { postData, getTableData, downloadTable, updloadTable };
+const deleteTableById = createAsyncThunk(
+  "form/delete",
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
+    const tableId = state.form.data._id;
+
+    if (!tableId) return rejectWithValue("Cannot delete the table.");
+
+    const { res, error } = await deleteTable(tableId);
+
+    if (error) return rejectWithValue(error.response?.data || error.message);
+    return res.data;
+  }
+);
+
+export { postData, getTableData, downloadTable, updloadTable, deleteTableById };
