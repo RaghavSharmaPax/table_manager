@@ -81,12 +81,14 @@ const formReducer = createSlice({
         dimensions: { rows: 0, cols: 0 },
         viewMode: "write",
         table: [],
+        owner: "",
       };
       state.toShow = {
         rows: 0,
         cols: 0,
       };
       state.error = "";
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
