@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  SharedTableType,
-  UserTableType,
-  UserType,
-} from "../../utils/TableManager/utils";
+import { SharedTableType, UserTableType, UserType } from "../../utils/types";
 import {
   authenticateUser,
   createNewUser,

@@ -1,10 +1,6 @@
 import { forwardRef } from "react";
+import { SharedTableType, UserTableType } from "../../../utils/types";
 import "./styles.css";
-
-import {
-  SharedTableType,
-  UserTableType,
-} from "../../../utils/TableManager/utils";
 
 const Input = forwardRef<HTMLInputElement, any>(
   (

@@ -8,7 +8,7 @@ import {
   logoutUser,
 } from "../../redux/userReducer/actions";
 import reducer from "../../redux/userReducer/reducer";
-import { UserTableType, UserType } from "../../utils/TableManager/utils";
+import { UserTableType, UserType } from "../../utils/types";
 
 const defState = {
   user: {} as UserType,

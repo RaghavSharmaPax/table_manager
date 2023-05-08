@@ -6,7 +6,7 @@ import { clearState, updateTableName } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
 import { getUserTables } from "../../redux/userReducer/actions";
-import { NotificationType, TagName } from "../../utils/TableManager/utils";
+import { NotificationType, TagName } from "../../utils/enums";
 import { Input, Select } from "../core/Inputs";
 
 const TableInput = () => {

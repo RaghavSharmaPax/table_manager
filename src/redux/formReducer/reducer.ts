@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  TableType,
-  updateColumns,
-  updateRows,
-} from "../../utils/TableManager/utils";
+import { updateColumns, updateRows } from "../../utils/TableManager/utils";
+import { TableType } from "../../utils/types";
 import { downloadTable, getTableData, postData, updloadTable } from "./actions";
 
 const initialState: {

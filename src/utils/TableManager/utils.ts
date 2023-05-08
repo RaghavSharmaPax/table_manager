@@ -1,64 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
-
-/**
- * @type FormType for the main state and the type of data for api
- */
-type TableType = {
-  _id?: string;
-  tableName: string;
-  owner?: string;
-  dimensions: { rows: number; cols: number };
-  viewMode: "read" | "write";
-  table: string[][];
-};
-
-type ResponseType = AxiosResponse<any, any> & { err: AxiosError };
-
-/**
- * names for input and select tag
- */
-enum TagName {
-  Row = "rowsInput",
-  Col = "colsInput",
-  TableName = "tableInput",
-  TableSelect = "tableSelect",
-}
-
-/**
- * @type NotificationType
- */
-enum NotificationType {
-  Error = "error",
-  Valid = "valid",
-  Default = "default",
-}
-
-/**
- * @type UserTable for object of the owned tables
- */
-type UserTableType = {
-  tableName: string;
-  _id: string;
-  viewMode: "read" | "write";
-};
-
-/**
- * @type SharedTable for object of the shared tables
- */
-type SharedTableType = {
-  tableName: string;
-  _id: string;
-  owner: string;
-  viewMode: "read" | "write";
-};
-
-/**
- * @type UserType
- */
-type UserType = {
-  username: string;
-  _id: string;
-};
+import { TableType, UserTableType } from "../types";
 
 /**
  * @function updateRows adds the rows to the table upon change from the user
@@ -175,19 +115,10 @@ const mapToAlpha = (key: number) => {
 };
 
 export {
-  TagName,
-  NotificationType,
   validateData,
   getFilteredTable,
   updateRows,
   updateColumns,
   doesTableExist,
   mapToAlpha,
-};
-export type {
-  UserType,
-  TableType,
-  ResponseType,
-  UserTableType,
-  SharedTableType,
 };

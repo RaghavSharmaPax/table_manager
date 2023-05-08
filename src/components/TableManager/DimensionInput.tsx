@@ -1,6 +1,6 @@
 import { updateDimensions } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { TagName } from "../../utils/TableManager/utils";
+import { TagName } from "../../utils/enums";
 import { Input } from "../core/Inputs";
 
 const DimensionInput = () => {

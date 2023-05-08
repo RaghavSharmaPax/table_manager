@@ -1,6 +1,5 @@
 import "@testing-library/jest-dom";
 import axios from "axios";
-import * as utils from "../../utils/TableManager/utils";
 import store from "../../redux";
 import {
   downloadTable,
@@ -13,7 +12,9 @@ import reducer, {
   updateTable,
   updateTableName,
 } from "../../redux/formReducer/reducer";
-import { TableType } from "../../utils/TableManager/utils";
+import * as utils from "../../utils/TableManager/utils";
+import { TableType } from "../../utils/types";
+
 const defState: {
   data: TableType;
   [key: string]: any;

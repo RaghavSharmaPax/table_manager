@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { NotificationType } from "../../utils/TableManager/utils";
+import { NotificationType } from "../../utils/enums";
 import { finishTimer } from "./actions";
 
 /**
@@ -17,7 +17,7 @@ export const NotificationTemplate = {
   timer: Timer.Start,
 };
 
-const initialState: { messages: typeof NotificationTemplate[] } = {
+const initialState: { messages: (typeof NotificationTemplate)[] } = {
   messages: [],
 };
 

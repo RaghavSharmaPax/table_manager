@@ -7,9 +7,9 @@ import reducer, {
   NotificationTemplate,
   Timer,
 } from "../../redux/notificationReducer/reducer";
-import { NotificationType } from "../../utils/TableManager/utils";
+import { NotificationType } from "../../utils/enums";
 
-const defState: { messages: typeof NotificationTemplate[] } = {
+const defState: { messages: (typeof NotificationTemplate)[] } = {
   messages: [],
 };
 

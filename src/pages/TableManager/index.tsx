@@ -28,7 +28,7 @@ import {
   getUserTables,
   shareTable,
 } from "../../redux/userReducer/actions";
-import { NotificationType } from "../../utils/TableManager/utils";
+import { NotificationType } from "../../utils/enums";
 import "./styles.css";
 
 const TableManager = () => {

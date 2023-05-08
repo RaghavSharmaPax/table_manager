@@ -4,7 +4,7 @@ import CredentialForm from "../../components/core/CredentialsForm";
 import { useAppDispatch } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
 import { createNewUser } from "../../redux/userReducer/actions";
-import { NotificationType } from "../../utils/TableManager/utils";
+import { NotificationType } from "../../utils/enums";
 
 import "./styles.css";
 

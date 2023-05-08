@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { NavigateFunction } from "react-router-dom";
 import { AppDispatch } from "../redux";
 import { createNotification } from "../redux/notificationReducer/reducer";
-import { NotificationType } from "../utils/TableManager/utils";
+import { NotificationType } from "../utils/enums";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.REACT_APP_SERVICE_ROUTE;
