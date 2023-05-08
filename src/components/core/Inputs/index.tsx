@@ -1,48 +1,49 @@
 import { forwardRef } from "react";
 import { SharedTableType, UserTableType } from "../../../utils/types";
 import "./styles.css";
+import { TagName } from "../../../utils/enums";
 
-const Input = forwardRef<HTMLInputElement, any>(
-  (
-    {
-      type,
-      name,
-      error,
-      label,
-      value,
-      onChange,
-      min,
-      disable = false,
-    }: {
-      type: string;
-      error?: string;
-      name: string;
-      label: string;
-      value: string | number;
-      onChange: (e: any) => void;
-      min?: number;
-      disable?: boolean;
-    },
-    ref
-  ) => {
-    return (
-      <div className="input">
-        <label>{label}</label>
-        <input
-          disabled={disable}
-          data-testid="test_input"
-          type={type}
-          value={value}
-          name={name}
-          min={min}
-          ref={ref}
-          onChange={onChange}
-        />
-        {error && <p className="input__error">{error}</p>}
-      </div>
-    );
-  }
-);
+const Input = ({
+  type,
+  name,
+  error,
+  label,
+  value,
+  onChange,
+  min,
+  disable = false,
+}: {
+  type: string;
+  error?: string;
+  name: string;
+  label: string;
+  value: string | number;
+  onChange: (e: any) => void;
+  min?: number;
+  disable?: boolean;
+}) => {
+  return (
+    <div className="input">
+      <label>{label}</label>
+      <input
+        disabled={disable}
+        data-testid={
+          name === TagName.TableName ? `test_input_${name}` : `test_input`
+        }
+        type={type}
+        value={value}
+        name={name}
+        min={min}
+        onChange={onChange}
+      />
+      {error && <p className="input__error">{error}</p>}
+    </div>
+  );
+};
+
+const FileInput = forwardRef<HTMLInputElement, any>(({ onChange }, ref) => (
+  <input type="file" name="file_upload" ref={ref} onChange={onChange} />
+));
 
 const Checkbox = ({
   label,
@@ -129,4 +130,4 @@ const Select = ({
   );
 };
 
-export { Input, Checkbox, Radio, Select };
+export { Input, Checkbox, Radio, Select, FileInput };

@@ -7,9 +7,9 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
 import { getUserTables } from "../../redux/userReducer/actions";
 import { NotificationType, TagName } from "../../utils/enums";
-import { Input, Select } from "../core/Inputs";
+import { FileInput, Input, Select } from "../core/Inputs";
 
-const TableInput = () => {
+const UserInput = () => {
   /**
    * @var tableName store observer to monitor the value of the table name input field
    * @var userTables store observer to montior the list of table that the user owns and shared with them
@@ -121,18 +121,11 @@ const TableInput = () => {
       />
 
       <div className="cta__file_upload">
-        <Input
-          ref={fileUploadRef}
-          type="file"
-          name="file_upload"
-          value=""
-          label=""
-          onChange={handleUpload}
-        ></Input>
+        <FileInput onChange={handleUpload} />
         <FontAwesomeIcon icon={faUpload} />
       </div>
     </div>
   );
 };
 
-export default TableInput;
+export default UserInput;
