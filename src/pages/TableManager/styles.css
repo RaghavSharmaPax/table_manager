@@ -98,6 +98,24 @@
   color: white;
 }
 
+.table_actions > .btn:nth-of-type(1) {
+  border-color: #33cc66;
+  color: #33cc66;
+}
+.table_actions > .btn:nth-of-type(1):hover {
+  background-color: #33cc66;
+  color: white;
+}
+
+.table_actions > .btn:last-of-type {
+  border-color: red;
+  color: red;
+}
+.table_actions > .btn:last-of-type:hover {
+  background-color: red;
+  color: white;
+}
+
 .table_actions > .btn > .svg-inline--fa {
   margin: 0;
 }
