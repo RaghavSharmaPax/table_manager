@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import Button from "../core/Button";
-import Checkbox from "../core/Checkbox";
-import Radio from "../core/Radio";
+import { Checkbox, Radio } from "../core/Inputs";
 
 const ModalUserSelect = ({
   onShareSubmit,

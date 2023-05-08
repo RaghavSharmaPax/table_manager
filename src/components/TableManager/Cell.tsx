@@ -1,8 +1,7 @@
 import { memo } from "react";
 import { updateTable } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-
-import Input from "../core/Input/Input";
+import { Input } from "../core/Inputs";
 
 const Cell = ({
   rowIdx,

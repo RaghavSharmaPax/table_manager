@@ -7,8 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
 import { getUserTables } from "../../redux/userReducer/actions";
 import { NotificationType, TagName } from "../../utils/TableManager/utils";
-import Input from "../core/Input/Input";
-import Select from "../core/Select/Select";
+import { Input, Select } from "../core/Inputs";
 
 const TableInput = () => {
   /**

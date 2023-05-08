@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "../Button";
-import Input from "../Input/Input";
-
+import { Input } from "../Inputs";
 import "./styles.css";
 
 const CredentialForm = ({
