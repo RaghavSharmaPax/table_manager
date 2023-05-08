@@ -24,6 +24,7 @@ const defState: {
     tableName: "",
     viewMode: "write",
     dimensions: { rows: 0, cols: 0 },
+    owner: "",
     table: [],
   },
   toShow: {
@@ -99,6 +100,7 @@ describe("Test Form Reducer", () => {
       ["", "", ""],
       ["", "", ""],
     ];
+    prevState.data.owner = "me";
 
     expect(reducer(prevState, clearState)).toEqual(defState);
   });
@@ -162,6 +164,7 @@ describe("Test Form Reducer", () => {
         ["", "", "nice ", ""],
         ["noice", "", "", "table"],
       ],
+      viewMode: "read",
     });
   });
 

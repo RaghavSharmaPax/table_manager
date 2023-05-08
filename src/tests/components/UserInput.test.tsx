@@ -10,46 +10,53 @@ import MockParent from "../mock components/MockParent";
 describe("user input tests", () => {
   let appSelectorMock: any;
 
-  beforeEach(() => {
-    appSelectorMock = jest
-      .spyOn(reduxHooks, "useAppSelector")
-      .mockImplementation(() => store.getState);
-  });
+  // beforeEach(() => {
+  //   appSelectorMock = jest
+  //     .spyOn(reduxHooks, "useAppSelector")
+  //     .mockImplementation(() => store.getState);
+  // });
 
-  afterEach(() => {
-    appSelectorMock.mockRestore();
-  });
+  // afterEach(() => {
+  //   appSelectorMock.mockRestore();
+  // });
 
-  test("add user input", async () => {
+  test("add user input table name", async () => {
     render(
       <MockParent>
         <UserInput />
       </MockParent>
     );
-    // });
-    expect(appSelectorMock).toHaveBeenCalled();
-    const UsernameInput = await screen.findByTestId("test_input");
-    fireEvent.change(UsernameInput, { target: { value: "rag" } });
-    expect((UsernameInput as HTMLInputElement).value).toBe("rag");
+
+    const TableNameInput = await screen.findByTestId("test_input_tableInput");
+    fireEvent.change(TableNameInput, { target: { value: "first table" } });
+
+    expect((TableNameInput as HTMLInputElement).value).toBe("first table");
   });
 
   test("select user initialized with empty val", async () => {
+    const tableNameMock = jest
+      .spyOn(reduxHooks, "useAppSelector")
+      .mockImplementationOnce(() => store.getState().form.data.tableName)
+      .mockImplementationOnce(() => store.getState().user);
     render(
       <MockParent>
         <UserInput />
       </MockParent>
     );
+    expect(tableNameMock).toHaveBeenCalled();
 
     const Store = store;
-    const getSpy = jest.spyOn(axios, "get").mockRejectedValueOnce({
+    const getSpy = jest.spyOn(axios, "get").mockResolvedValueOnce({
       data: {
-        _id: "6422cca1d6daa09f0552b25f",
+        _id: "6433c1a091a355ef0e1f0a91",
+        username: "rag2",
         tables: [
           {
-            _id: "6422ccc5d6daa09f0552b264",
+            _id: "645213ab36f782204f9367e4",
             tableName: "first table",
           },
         ],
+        sharedTables: [],
       },
     });
 

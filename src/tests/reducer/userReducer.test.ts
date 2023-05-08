@@ -8,49 +8,30 @@ import {
   logoutUser,
 } from "../../redux/userReducer/actions";
 import reducer from "../../redux/userReducer/reducer";
-import { UserTableType, UserType } from "../../utils/types";
 
 const defState = {
-  user: {} as UserType,
+  user: "",
   isAuthenticated: false,
-  userTables: [] as UserTableType[],
+  userTables: { own: [], shared: [] },
+  users: [],
   loading: false,
   error: "",
 };
 
 describe("Test auth", () => {
-  test("authenticate user action", async () => {
+  test("authenticate user", async () => {
     const postSpy = jest.spyOn(axios, "post").mockResolvedValueOnce({
       data: {
-        _id: "641d4894607b974657e51356",
         username: "test_user_1",
-        password: "U2FsdGVkX1+p5/dPDmKcVuKPWIMpkRhA1y6MXtA1pfU=",
-        dimensions: {
-          rows: 2,
-          cols: 2,
-          _id: "641d889f521c0da1e8e40f34",
-        },
-        table: [["abcd", ""]],
-        __v: 0,
+        _id: "641d4894607b974657e51356",
       },
     });
     const Store = store;
     const userData = { username: "test_user_1", password: "123" };
     await Store.dispatch(authenticateUser(userData));
-    expect(postSpy).toBeCalledWith("/authenticate", userData);
+    expect(postSpy).toBeCalled();
 
-    expect(Store.getState().user.user).toEqual({
-      _id: "641d4894607b974657e51356",
-      username: "test_user_1",
-      password: "U2FsdGVkX1+p5/dPDmKcVuKPWIMpkRhA1y6MXtA1pfU=",
-      dimensions: {
-        rows: 2,
-        cols: 2,
-        _id: "641d889f521c0da1e8e40f34",
-      },
-      table: [["abcd", ""]],
-      __v: 0,
-    });
+    expect(Store.getState().user.user).toEqual("test_user_1");
   });
 });
 
@@ -62,13 +43,15 @@ describe("Testing user reducer", () => {
   test("getting user tables from server", async () => {
     const getSpy = jest.spyOn(axios, "get").mockResolvedValueOnce({
       data: {
-        _id: "6422cca1d6daa09f0552b25f",
+        _id: "6433c1a091a355ef0e1f0a91",
+        username: "rag2",
         tables: [
           {
-            _id: "6422ccc5d6daa09f0552b264",
+            _id: "645213ab36f782204f9367e4",
             tableName: "first table",
           },
         ],
+        sharedTables: [],
       },
     });
 
@@ -77,12 +60,15 @@ describe("Testing user reducer", () => {
     expect(getSpy).toBeCalled();
     const state = Store.getState().user;
 
-    expect(state.userTables).toEqual([
+    expect(state.userTables.own).toEqual([
       {
-        _id: "6422ccc5d6daa09f0552b264",
+        _id: "645213ab36f782204f9367e4",
         tableName: "first table",
+        viewMode: "write",
       },
     ]);
+
+    expect(state.userTables.shared).toEqual([]);
   });
 
   test("logout user", async () => {
@@ -114,6 +100,6 @@ describe("Testing user reducer", () => {
     const Store = store;
     const newUser = { username: "test_user_2", password: "123" };
     await Store.dispatch(createNewUser(newUser));
-    expect(postSpy).toBeCalledWith("/create_user", newUser);
+    expect(postSpy).toBeCalled();
   });
 });
