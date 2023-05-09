@@ -42,7 +42,13 @@ const Input = ({
 };
 
 const FileInput = forwardRef<HTMLInputElement, any>(({ onChange }, ref) => (
-  <input type="file" name="file_upload" ref={ref} onChange={onChange} />
+  <input
+    type="file"
+    name="file_upload"
+    ref={ref}
+    onChange={onChange}
+    accept=".csv"
+  />
 ));
 
 const Checkbox = ({

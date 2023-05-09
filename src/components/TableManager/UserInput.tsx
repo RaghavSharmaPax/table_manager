@@ -85,7 +85,8 @@ const UserInput = () => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     const res = await dispatch(updloadTable(file));
-    fileUploadRef.current!.value = "";
+    if (!fileUploadRef.current) return;
+    fileUploadRef.current.value = "";
     if (res.meta.requestStatus === "rejected") {
       return dispatch(
         createNotification({
@@ -121,7 +122,7 @@ const UserInput = () => {
       />
 
       <div className="cta__file_upload">
-        <FileInput onChange={handleUpload} />
+        <FileInput onChange={handleUpload} ref={fileUploadRef} />
         <FontAwesomeIcon icon={faUpload} />
       </div>
     </div>
