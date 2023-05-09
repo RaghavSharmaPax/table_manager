@@ -13,9 +13,8 @@ const Cell = ({
   viewMode: "read" | "write";
 }) => {
   const dispatch = useAppDispatch();
-  const value = useAppSelector(
-    (state) => state.form.data.table[rowIdx][colIdx]
-  );
+  const value =
+    useAppSelector((state) => state.form.data.table[rowIdx][colIdx]) || "";
 
   /**
    * @function updateRowVal handles the changes to cells in a row and updates the table in the store

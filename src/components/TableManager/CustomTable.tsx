@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { mapToAlpha } from "../../utils/TableManager/utils";
 import Cell from "./Cell";
@@ -10,6 +10,11 @@ const CustomTable = () => {
    */
   const toShow = useAppSelector((state) => state.form.toShow);
   const viewMode = useAppSelector((state) => state.form.data.viewMode);
+
+  useEffect(() => {
+    if (toShow.rows === 0) setRowStart(0);
+    if (toShow.cols === 0) setColStart(0);
+  }, [toShow.rows, toShow.cols]);
 
   /**
    * @var rowStart keeps the current row index from which the table is being displayed
@@ -67,7 +72,9 @@ const CustomTable = () => {
       if (rowStart + 15 + 15 <= toShow.rows) {
         setRowStart((prevRowStart) => prevRowStart + 15);
       } else {
-        setRowStart((prevRowStart) => toShow.rows - prevRowStart + 15);
+        setRowStart(
+          (prevRowStart) => prevRowStart + toShow.rows - prevRowStart - 15
+        );
       }
 
       setTimeout(() => {
