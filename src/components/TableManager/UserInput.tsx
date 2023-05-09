@@ -102,6 +102,7 @@ const UserInput = () => {
       })
     );
     dispatch(getUserTables());
+    dispatch(clearState());
   };
 
   return (

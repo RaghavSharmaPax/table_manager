@@ -155,13 +155,19 @@ const TableManager = () => {
   const handleShareSubmit = async (data: any) => {
     const res = await dispatch(shareTable(data));
     if (res.meta.requestStatus === "rejected")
-      dispatch(
+      return dispatch(
         createNotification({
           message: "Could not share the table. Try again later.",
           type: NotificationType.Error,
         })
       );
     setShowModal(false);
+    dispatch(
+      createNotification({
+        message: "Table shared",
+        type: NotificationType.Valid,
+      })
+    );
   };
 
   const onDelete = async () => {
