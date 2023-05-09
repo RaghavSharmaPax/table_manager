@@ -111,7 +111,7 @@ const userReducer = createSlice({
         state.loading = true;
       })
       .addCase(createNewUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.username;
         state.isAuthenticated = true;
       })
       .addCase(createNewUser.rejected, (state, _action) => {
