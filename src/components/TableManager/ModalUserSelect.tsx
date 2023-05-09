@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/hooks";
+import { createNotification } from "../../redux/notificationReducer/reducer";
+import { NotificationType } from "../../utils/enums";
 import Button from "../core/Button";
 import { Checkbox, Radio } from "../core/Inputs";
 
@@ -16,7 +19,7 @@ const ModalUserSelect = ({
   const users = useAppSelector((state) => state.user.users);
   const [checklist, setChecklist] = useState<any[]>([]);
   const [viewMode, setViewMode] = useState<"read" | "write">("read");
-
+  const dispatch = useDispatch();
   /**
    * updates the state of the viewMode
    * @param e onChange event on the radio group
@@ -49,6 +52,22 @@ const ModalUserSelect = ({
     const selectedUsers = checklist.filter((user) => user.checked);
     const userIds = selectedUsers.map((user) => user._id);
 
+    if (checklist.length === 0)
+      return dispatch(
+        createNotification({
+          message: "No user present to share with.",
+          type: NotificationType.Error,
+        })
+      );
+
+    if (userIds.length === 0)
+      return dispatch(
+        createNotification({
+          message: "Please select atleast one user to share with.",
+          type: NotificationType.Error,
+        })
+      );
+
     onShareSubmit({
       usersToShare: userIds,
       viewMode,
@@ -58,6 +77,11 @@ const ModalUserSelect = ({
   return (
     <div className="modal__content__user_select">
       <h3 className="user__select__title">Users</h3>
+      {checklist.length === 0 && (
+        <p>
+          <i>No users present.</i>
+        </p>
+      )}
       {checklist.map((user, idx) => (
         <Checkbox
           key={user._id}
@@ -75,6 +99,7 @@ const ModalUserSelect = ({
             name="viewMode"
             value="read"
             onChange={updateViewMode}
+            checked={true}
           />
           <Radio
             disable={true}

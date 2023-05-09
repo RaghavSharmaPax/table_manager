@@ -73,17 +73,26 @@ const Radio = ({
   name,
   value,
   onChange,
+  checked,
   disable = false,
 }: {
   label: string;
   name: string;
   value: string;
+  checked?: boolean;
   onChange: (e: any) => void;
   disable?: boolean;
 }) => {
   return (
     <div className="radio_input" onChange={onChange}>
-      <input disabled={disable} type="radio" name={name} value={value} />
+      <input
+        disabled={disable}
+        type="radio"
+        name={name}
+        value={value}
+        checked={checked}
+        onChange={() => {}}
+      />
       <label>{label}</label>
     </div>
   );
