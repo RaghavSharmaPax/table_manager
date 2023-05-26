@@ -25,6 +25,7 @@ const defState: {
     viewMode: "write",
     dimensions: { rows: 0, cols: 0 },
     owner: "",
+    isOwned: false,
     table: [],
   },
   toShow: {

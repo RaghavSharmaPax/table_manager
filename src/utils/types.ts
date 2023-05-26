@@ -7,6 +7,7 @@ type TableType = {
   _id?: string;
   tableName: string;
   owner?: string;
+  isOwned: boolean;
   dimensions: { rows: number; cols: number };
   viewMode: "read" | "write";
   table: string[][];

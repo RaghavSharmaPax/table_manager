@@ -61,11 +61,12 @@ const CustomTable = () => {
         e.target.scrollLeft = 100;
       }, 250);
     }
-
     const hasReachedBottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      Math.floor(e.target.scrollHeight - e.target.scrollTop) ===
+      Math.floor(e.target.clientHeight);
     const hasReachedRight =
-      e.target.scrollWidth - e.target.scrollLeft === e.target.clientWidth;
+      Math.floor(e.target.scrollWidth - e.target.scrollLeft) ===
+      Math.floor(e.target.clientWidth);
 
     if (haveMoreOnBottom && hasReachedBottom) {
       // change the row indexs to show the next set if we have reached the bottom and have more rows to show

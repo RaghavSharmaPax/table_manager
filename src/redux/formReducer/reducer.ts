@@ -12,6 +12,7 @@ const initialState: {
     tableName: "",
     dimensions: { rows: 0, cols: 0 },
     owner: "",
+    isOwned: false,
     viewMode: "write",
     table: [],
   },
@@ -82,6 +83,7 @@ const formReducer = createSlice({
         viewMode: "write",
         table: [],
         owner: "",
+        isOwned: false,
       };
       state.toShow = {
         rows: 0,

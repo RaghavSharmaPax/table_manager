@@ -7,8 +7,10 @@ import {
   signout,
   getUsers,
   share,
+  deleteShared,
 } from "../../api/axiosController";
 import { RootState } from "..";
+import { create } from "domain";
 
 /**
  * async action authenticate user
@@ -37,6 +39,18 @@ const logoutUser = createAsyncThunk(
 
     if (error) return rejectWithValue(error.response?.data || error.message);
 
+    return res.data;
+  }
+);
+
+const deleteFromShared = createAsyncThunk(
+  "user/deleteFromShared",
+  async (_, { rejectWithValue, getState }) => {
+    const store = getState() as RootState;
+    const tableId = store.form.data._id;
+    if (!tableId) return rejectWithValue("Cannot delete the table.");
+    const { res, error } = await deleteShared(tableId);
+    if (error) return rejectWithValue(error.response?.data || error.message);
     return res.data;
   }
 );
@@ -121,4 +135,5 @@ export {
   logoutUser,
   signoutUser,
   getUserList,
+  deleteFromShared,
 };

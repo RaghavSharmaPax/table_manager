@@ -195,6 +195,9 @@ const createUser = async (userData: { username: string; password: string }) =>
 const deleteTable = async (tableId: string) =>
   postRequest("/table/delete_table", { tableId });
 
+const deleteShared = async (tableId: string) =>
+  postRequest("/user/delete_from_shared", { tableId });
+
 export {
   createNewTable,
   updateTableData,
@@ -210,4 +213,5 @@ export {
   getUsers,
   share,
   deleteTable,
+  deleteShared,
 };
