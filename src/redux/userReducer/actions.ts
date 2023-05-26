@@ -1,16 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from "..";
 import {
   authenticate,
   createUser,
-  fetchUserTables,
-  logout,
-  signout,
-  getUsers,
-  share,
   deleteShared,
+  fetchUserTables,
+  getUsers,
+  logout,
+  share,
+  signout,
 } from "../../api/axiosController";
-import { RootState } from "..";
-import { create } from "domain";
 
 /**
  * async action authenticate user
