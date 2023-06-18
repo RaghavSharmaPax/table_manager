@@ -77,7 +77,7 @@ describe("Testing user reducer", () => {
     const Store = store;
     await Store.dispatch(logoutUser());
     expect(postSpy).toBeCalled();
-    const isAuthenticated = Store.getState().user.isAuthenticated;
+    const isAuthenticated = !!Store.getState().user.user;
     expect(isAuthenticated).toBe(false);
   });
 

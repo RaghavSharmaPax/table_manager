@@ -1,13 +1,10 @@
-import { faUpload } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
-import { getTableData, updloadTable } from "../../redux/formReducer/actions";
-import { clearState, updateTableName } from "../../redux/formReducer/reducer";
+import { useEffect, useState } from "react";
+import { clearState, getTableData } from "../../redux/formReducer/actions";
+import { updateTableName } from "../../redux/formReducer/reducer";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
-import { getUserTables } from "../../redux/userReducer/actions";
 import { NotificationType, TagName } from "../../utils/enums";
-import { FileInput, Input, Select } from "../core/Inputs";
+import { Input, Select } from "../core/Inputs";
 
 const UserInput = () => {
   /**
@@ -20,7 +17,6 @@ const UserInput = () => {
   const { userTables } = useAppSelector((state) => state.user);
 
   const [tableSelected, setTableSelected] = useState("");
-  const fileUploadRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();
 
@@ -39,6 +35,7 @@ const UserInput = () => {
   const fetchTableData = async (tableId: string) => {
     const res = await dispatch(getTableData(tableId));
     if (res.meta.requestStatus === "rejected") {
+      setTableSelected("");
       return dispatch(
         createNotification({
           message: res.payload,
@@ -76,35 +73,6 @@ const UserInput = () => {
     fetchTableData(value);
   };
 
-  /**
-   *extracts the file using the @var fileUploadRef and passes it along to be sent to the server and generates a notification accordingly
-   * @param e onChange event when the users uploads a file
-   * @returns void
-   */
-  const handleUpload = async (e: any) => {
-    if (!e.target.files) return;
-    const file = e.target.files[0];
-    const res = await dispatch(updloadTable(file));
-    if (!fileUploadRef.current) return;
-    fileUploadRef.current.value = "";
-    if (res.meta.requestStatus === "rejected") {
-      return dispatch(
-        createNotification({
-          message: res.payload,
-          type: NotificationType.Error,
-        })
-      );
-    }
-    dispatch(
-      createNotification({
-        message: "File upload successful",
-        type: NotificationType.Valid,
-      })
-    );
-    dispatch(getUserTables());
-    dispatch(clearState());
-  };
-
   return (
     <div className="user_inputs">
       <Input
@@ -121,11 +89,6 @@ const UserInput = () => {
         onChange={onSelectChange}
         label="Select Table"
       />
-
-      <div className="cta__file_upload">
-        <FileInput onChange={handleUpload} ref={fileUploadRef} />
-        <FontAwesomeIcon icon={faUpload} />
-      </div>
     </div>
   );
 };

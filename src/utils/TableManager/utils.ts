@@ -114,6 +114,19 @@ const mapToAlpha = (key: number) => {
   return alpha;
 };
 
+const shouldClose = (
+  isTableNamePresent: boolean,
+  doesTableHaveData: boolean
+) => {
+  if (isTableNamePresent || doesTableHaveData) {
+    if (!window.confirm("Changes will not be saved. Leave anyway?")) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export {
   validateData,
   getFilteredTable,
@@ -121,4 +134,5 @@ export {
   updateColumns,
   doesTableExist,
   mapToAlpha,
+  shouldClose,
 };

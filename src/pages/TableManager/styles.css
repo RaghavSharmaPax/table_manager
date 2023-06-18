@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   gap: 1em;
   background-color: #f0f2f5;
 }
@@ -63,6 +63,10 @@
   max-height: calc(100vh * 0.4);
 }
 
+.custom_table > table {
+  margin-inline: auto;
+}
+
 /* 
 @media only screen and (max-width: 570px) {
   .custom_table {
@@ -78,6 +82,8 @@
   min-width: 150px;
 }
 .table_actions {
+  width: 100%;
+  max-width: 500px;
   display: flex;
   align-items: center;
   gap: 10px;

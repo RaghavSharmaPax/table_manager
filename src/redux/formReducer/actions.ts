@@ -1,13 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import {
+  clearResource,
   createNewTable,
   deleteTable,
   fetchTableData,
   sendDownloadReq,
   updateTableData,
   uploadReq,
-} from "../../api/axiosController";
+} from "../../api/routes";
 
 import {
   doesTableExist,
@@ -44,19 +45,17 @@ const postData = createAsyncThunk(
 
     const userTables = state.user.userTables;
 
-    /**
-     * checks if the table has an id
-     * if it has an id two cases are possible 1. hisOwnTable 2. sharedTable
-     * for case 1 if table exists in own array then update table values; if table does not exist create a table for him
-     * for case 2 it will not be in the own array and we will create a new table
-     */
     const isTableOwned =
       data._id && doesTableExist(userTables.own, "_id", data._id);
 
     // send apt request
     const { res, error } = isTableOwned
-      ? await updateTableData(filteredData)
-      : await createNewTable(filteredData);
+      ? await updateTableData({ tableId: data._id, tableData: filteredData }) // update the table owned by user
+      : !!data._id // table not owned, check if table has id or not
+      ? data.viewMode === "read" // if table has id check view mode
+        ? await createNewTable(filteredData) // if viewMode is read create a new table for the user to manipulate
+        : await updateTableData({ tableId: data._id, tableData: filteredData }) // if viewMode is write make changes to the existing table
+      : await createNewTable(filteredData); // if table is not owned by user and does not have an id then create a new table for user
 
     // reject the promise if error occurs
     if (error) return rejectWithValue(error.response?.data || error.message);
@@ -89,7 +88,13 @@ const getTableData = createAsyncThunk(
     if (error) return rejectWithValue(error.response?.data || error.message);
 
     if (isTableOwned) return { ...res.data, viewMode: "write" };
-    return { ...res.data, viewMode: "read" };
+
+    const sharedTable = state.user.userTables.shared.find(
+      (st) => st._id === tableId
+    );
+    if (!sharedTable) return rejectWithValue("Table does not exist");
+
+    return { ...res.data, viewMode: sharedTable.viewMode };
   }
 );
 
@@ -133,6 +138,15 @@ const updloadTable = createAsyncThunk(
   }
 );
 
+const clearState = createAsyncThunk(
+  "form/clearState",
+  async (_, { rejectWithValue }) => {
+    const { res, error } = await clearResource();
+    if (error) return rejectWithValue(error.response?.data || error.message);
+    return res.data;
+  }
+);
+
 const deleteTableById = createAsyncThunk(
   "form/delete",
   async (_, { rejectWithValue, getState }) => {
@@ -148,4 +162,11 @@ const deleteTableById = createAsyncThunk(
   }
 );
 
-export { postData, getTableData, downloadTable, updloadTable, deleteTableById };
+export {
+  postData,
+  getTableData,
+  downloadTable,
+  updloadTable,
+  deleteTableById,
+  clearState,
+};

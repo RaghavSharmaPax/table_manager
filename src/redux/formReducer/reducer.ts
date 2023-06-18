@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { updateColumns, updateRows } from "../../utils/TableManager/utils";
 import { TableType } from "../../utils/types";
-import { downloadTable, getTableData, postData, updloadTable } from "./actions";
+import {
+  clearState,
+  downloadTable,
+  getTableData,
+  postData,
+  updloadTable,
+} from "./actions";
 
 const initialState: {
   data: TableType;
@@ -12,7 +18,6 @@ const initialState: {
     tableName: "",
     dimensions: { rows: 0, cols: 0 },
     owner: "",
-    isOwned: false,
     viewMode: "write",
     table: [],
   },
@@ -75,26 +80,61 @@ const formReducer = createSlice({
      * @function clearState resets the table state to empty values
      * @param state current state of the form Reducer
      */
-    clearState(state) {
-      state.data = {
-        _id: "",
-        tableName: "",
-        dimensions: { rows: 0, cols: 0 },
-        viewMode: "write",
-        table: [],
-        owner: "",
-        isOwned: false,
-      };
-      state.toShow = {
-        rows: 0,
-        cols: 0,
-      };
-      state.error = "";
-      state.loading = false;
-    },
+    // clearState(state) {
+    //   state.data = {
+    //     _id: "",
+    //     tableName: "",
+    //     dimensions: { rows: 0, cols: 0 },
+    //     viewMode: "write",
+    //     table: [],
+    //     owner: "",
+    //     isOwned: false,
+    //   };
+    //   state.toShow = {
+    //     rows: 0,
+    //     cols: 0,
+    //   };
+    //   state.error = "";
+    //   state.loading = false;
+    // },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(clearState.pending, (state, _action) => {
+        state.loading = true;
+      })
+      .addCase(clearState.rejected, (state, _action) => {
+        state.data = {
+          _id: "",
+          tableName: "",
+          dimensions: { rows: 0, cols: 0 },
+          viewMode: "write",
+          table: [],
+          owner: "",
+        };
+        state.toShow = {
+          rows: 0,
+          cols: 0,
+        };
+        state.error = "";
+        state.loading = false;
+      })
+      .addCase(clearState.fulfilled, (state, _action) => {
+        state.data = {
+          _id: "",
+          tableName: "",
+          dimensions: { rows: 0, cols: 0 },
+          viewMode: "write",
+          table: [],
+          owner: "",
+        };
+        state.toShow = {
+          rows: 0,
+          cols: 0,
+        };
+        state.error = "";
+        state.loading = false;
+      })
       .addCase(postData.pending, (state, _action) => {
         state.loading = true;
       })
@@ -117,27 +157,27 @@ const formReducer = createSlice({
         state.error = action.payload;
         state.loading = false;
       })
-      .addCase(updloadTable.pending, (state, action) => {
+      .addCase(updloadTable.pending, (state, _action) => {
         state.loading = true;
       })
-      .addCase(updloadTable.fulfilled, (state, action) => {
+      .addCase(updloadTable.fulfilled, (state, _action) => {
         state.loading = true;
       })
-      .addCase(updloadTable.rejected, (state, action) => {
+      .addCase(updloadTable.rejected, (state, _action) => {
         state.loading = true;
       })
-      .addCase(downloadTable.pending, (state, action) => {
+      .addCase(downloadTable.pending, (state, _action) => {
         state.loading = true;
       })
-      .addCase(downloadTable.fulfilled, (state, action) => {
+      .addCase(downloadTable.fulfilled, (state, _action) => {
         state.loading = false;
       })
-      .addCase(downloadTable.rejected, (state, action) => {
+      .addCase(downloadTable.rejected, (state, _action) => {
         state.loading = false;
       });
   },
 });
 
-export const { updateTableName, updateDimensions, updateTable, clearState } =
+export const { updateTableName, updateDimensions, updateTable } =
   formReducer.actions;
 export default formReducer.reducer;

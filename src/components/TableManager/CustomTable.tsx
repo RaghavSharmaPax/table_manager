@@ -87,7 +87,9 @@ const CustomTable = () => {
       if (colStart + 15 + 15 <= toShow.cols) {
         setColStart((prevColStart) => prevColStart + 15);
       } else {
-        setColStart((prevColStart) => toShow.cols - prevColStart + 15);
+        setColStart(
+          (prevColStart) => prevColStart + toShow.cols - prevColStart - 15
+        );
       }
 
       setTimeout(() => {

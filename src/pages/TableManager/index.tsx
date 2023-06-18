@@ -1,32 +1,42 @@
-import { useEffect, useState } from "react";
-import Button from "../../components/core/Button";
-
-import CustomTable from "../../components/TableManager/CustomTable";
-import DimensionInput from "../../components/TableManager/DimensionInput";
-import UserInput from "../../components/TableManager/UserInput";
-import Modal from "../../components/core/Modal";
-
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import ActionIsland from "../../components/TableManager/ActionIsland";
+import CustomTable from "../../components/TableManager/CustomTable";
+import DimensionInput from "../../components/TableManager/DimensionInput";
 import ModalUserSelect from "../../components/TableManager/ModalUserSelect";
-import { postData } from "../../redux/formReducer/actions";
-import { clearState } from "../../redux/formReducer/reducer";
+import UserInput from "../../components/TableManager/UserInput";
+import Button from "../../components/core/Button";
+import Modal from "../../components/core/Modal";
+import { clearState, postData } from "../../redux/formReducer/actions";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { createNotification } from "../../redux/notificationReducer/reducer";
 import { getUserTables, shareTable } from "../../redux/userReducer/actions";
 import { NotificationType } from "../../utils/enums";
 import "./styles.css";
-import ActionIsland from "../../components/TableManager/ActionIsland";
 
 const TableManager = () => {
   /**
    * @var activeTable stores the tablename of the current table being viewed
    * @var showModal governs if the modal should be displayed on the screen; defaults to false
+   * @var isTableNamePresent checks if the user input for table name is given a value
+   * @var doesTableHaveData checks if the table has a size
    */
   const dispatch = useAppDispatch();
 
-  const isTableActionable = useAppSelector((state) => !!state.form.data._id);
   const [showModal, setShowModal] = useState(false);
+  const isTableNamePresent = useAppSelector(
+    (state) => !!state.form.data.tableName
+  );
+  const doesTableHaveData = useAppSelector((state) => {
+    const { toShow } = state.form;
+    const { dimensions } = state.form.data;
+
+    return (
+      (dimensions.rows === 0 && toShow.rows > 0) ||
+      (dimensions.cols === 0 && toShow.cols > 0)
+    );
+  });
 
   useEffect(() => {
     /**
@@ -48,18 +58,29 @@ const TableManager = () => {
     };
     fetchUsers();
 
-    return () => {
-      clearForm();
-    };
+    // return () => {
+    //   clearForm();
+    // };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
+  // handles whether user should be shown a confirm box when leaving the site with unsaved changes
+  useEffect(() => {
+    window.addEventListener("beforeunload", (e) => {
+      e.preventDefault();
+      if (isTableNamePresent || doesTableHaveData) e.returnValue = "Sure?";
+    });
+    return () => {
+      window.removeEventListener("beforeunload", () => {});
+    };
+  }, [isTableNamePresent, doesTableHaveData]);
+
   /**
    * clearing the state after successful submission
    */
-  const clearForm = () => {
-    dispatch(clearState());
+  const clearForm = async () => {
+    await dispatch(clearState());
   };
 
   /**
@@ -83,7 +104,7 @@ const TableManager = () => {
 
     dispatch(
       createNotification({
-        message: "New Entry has been added.",
+        message: "Table Updated",
         type: NotificationType.Valid,
       })
     );
@@ -117,7 +138,7 @@ const TableManager = () => {
     <div className="table_manager">
       <UserInput />
       <DimensionInput />
-      {isTableActionable && <ActionIsland updateModalState={setShowModal} />}
+      <ActionIsland updateModalState={setShowModal} />
       <CustomTable />
       <div className="table_manager__cta">
         <Button type="submit" text="Save" onClick={onSubmit}>

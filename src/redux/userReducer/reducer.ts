@@ -16,7 +16,6 @@ const userReducer = createSlice({
   initialState: {
     user: "",
     users: [] as UserType[],
-    isAuthenticated: false,
     userTables: { own: [], shared: [] } as {
       own: UserTableType[];
       shared: SharedTableType[];
@@ -24,7 +23,14 @@ const userReducer = createSlice({
     loading: false,
     error: "",
   },
-  reducers: {},
+  reducers: {
+    clearUserState(state) {
+      state.loading = false;
+      state.user = "";
+      state.userTables = defaultUserTables;
+      state.error = "";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(authenticateUser.pending, (state, _action) => {
@@ -32,20 +38,18 @@ const userReducer = createSlice({
       })
       .addCase(authenticateUser.fulfilled, (state, action) => {
         state.user = action.payload.username;
-        state.isAuthenticated = true;
         state.loading = false;
       })
       .addCase(authenticateUser.rejected, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = false;
+        state.user = "";
         state.error = action.payload as string;
       })
-      .addCase(logoutUser.pending, (state, action) => {
+      .addCase(logoutUser.pending, (state, _action) => {
         state.loading = true;
       })
-      .addCase(logoutUser.fulfilled, (state, action) => {
+      .addCase(logoutUser.fulfilled, (state, _action) => {
         state.loading = false;
-        state.isAuthenticated = false;
         state.user = "";
         state.userTables = defaultUserTables;
         state.error = "";
@@ -54,12 +58,11 @@ const userReducer = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(signoutUser.pending, (state, action) => {
+      .addCase(signoutUser.pending, (state, _action) => {
         state.loading = true;
       })
-      .addCase(signoutUser.fulfilled, (state, action) => {
+      .addCase(signoutUser.fulfilled, (state, _action) => {
         state.loading = false;
-        state.isAuthenticated = false;
         state.user = "";
         state.userTables = defaultUserTables;
         state.error = "";
@@ -73,6 +76,7 @@ const userReducer = createSlice({
       })
       .addCase(getUserTables.fulfilled, (state, action) => {
         const rawSharedTables = action.payload.sharedTables;
+
         const formattedSharedTables: SharedTableType[] = rawSharedTables.map(
           (table: {
             id: {
@@ -100,7 +104,6 @@ const userReducer = createSlice({
           shared: formattedSharedTables,
         };
         state.user = action.payload.username;
-        state.isAuthenticated = true;
         state.loading = false;
       })
       .addCase(getUserTables.rejected, (state, action) => {
@@ -112,22 +115,19 @@ const userReducer = createSlice({
       })
       .addCase(createNewUser.fulfilled, (state, action) => {
         state.user = action.payload.username;
-        state.isAuthenticated = true;
       })
       .addCase(createNewUser.rejected, (state, _action) => {
-        state.isAuthenticated = false;
+        state.user = "";
       })
       .addCase(getUserList.pending, (state, _action) => {
         state.loading = true;
       })
       .addCase(getUserList.fulfilled, (state, action) => {
         state.users = action.payload;
-        state.isAuthenticated = true;
       })
-      .addCase(getUserList.rejected, (state, _action) => {
-        state.isAuthenticated = false;
-      });
+      .addCase(getUserList.rejected, (_state, _action) => {});
   },
 });
 
+export const { clearUserState } = userReducer.actions;
 export default userReducer.reducer;

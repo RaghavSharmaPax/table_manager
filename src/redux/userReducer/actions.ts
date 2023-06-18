@@ -9,7 +9,7 @@ import {
   logout,
   share,
   signout,
-} from "../../api/axiosController";
+} from "../../api/routes";
 
 /**
  * async action authenticate user

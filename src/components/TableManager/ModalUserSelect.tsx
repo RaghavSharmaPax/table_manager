@@ -25,7 +25,7 @@ const ModalUserSelect = ({
    * @param e onChange event on the radio group
    * @returns void
    */
-  const updateViewMode = (e: any) => setViewMode("read");
+  const updateViewMode = (e: any) => setViewMode(e.target.value);
 
   /**
    * if the user list changes update the checklist to reflect the changes
@@ -99,14 +99,14 @@ const ModalUserSelect = ({
             name="viewMode"
             value="read"
             onChange={updateViewMode}
-            checked={true}
+            checked={viewMode === "read"}
           />
           <Radio
-            disable={true}
             label="write"
             name="viewMode"
             value="write"
             onChange={updateViewMode}
+            checked={viewMode === "write"}
           />
         </div>
       </div>

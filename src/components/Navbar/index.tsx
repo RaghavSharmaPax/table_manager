@@ -7,7 +7,7 @@ const Navbar = () => {
   /**
    * checks if the user is authenticated and displays the user actions accordingly
    */
-  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+  const isAuthenticated = useAppSelector((state) => !!state.user.user);
 
   return (
     <div className="navbar">

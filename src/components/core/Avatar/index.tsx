@@ -10,10 +10,23 @@ import { logoutUser, signoutUser } from "../../../redux/userReducer/actions";
 import Button from "../Button";
 
 import "./styles.css";
+import { shouldClose } from "../../../utils/TableManager/utils";
 
 const Avatar = () => {
   const dispatch = useAppDispatch();
   const username = useAppSelector((state) => state.user.user);
+  const isTableNamePresent = useAppSelector(
+    (state) => !!state.form.data.tableName
+  );
+  const doesTableHaveData = useAppSelector((state) => {
+    const { toShow } = state.form;
+    const { dimensions } = state.form.data;
+
+    return (
+      (dimensions.rows === 0 && toShow.rows > 0) ||
+      (dimensions.cols === 0 && toShow.cols > 0)
+    );
+  });
   const [avatarHash, setAvatarHash] = useState<number>(Math.random());
   const [drop, setDrop] = useState(false);
 
@@ -28,10 +41,12 @@ const Avatar = () => {
    * dispatches action to logout the user
    */
   const onLogout = async () => {
+    if (!shouldClose(isTableNamePresent, doesTableHaveData)) return;
     await dispatch(logoutUser());
   };
 
   const onSignout = async () => {
+    if (!shouldClose(isTableNamePresent, doesTableHaveData)) return;
     await dispatch(signoutUser());
   };
 
